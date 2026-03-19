@@ -6,16 +6,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0f1117">
+<meta name="theme-color" content="#f5f5f7">
 <meta name="apple-mobile-web-app-title" content="Planner">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
 <title>Weekly Planner</title>
 <style>
 :root {
-  --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a; --text: #e4e4e7;
-  --muted: #71717a; --accent: #818cf8; --green: #34d399; --red: #f87171;
-  --yellow: #fbbf24; --blue: #60a5fa; --pink: #f472b6; --orange: #fb923c;
+  --bg: #f5f5f7; --card: #ffffff; --border: #e2e4e9; --text: #1d1d1f;
+  --muted: #86868b; --accent: #5856d6; --green: #28a745; --red: #dc3545;
+  --yellow: #d4a017; --blue: #007aff; --pink: #af52de; --orange: #f5820d;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -54,7 +54,7 @@ body {
   font-size: 13px; font-weight: 500; transition: all 0.15s;
   white-space: nowrap; min-width: fit-content;
 }
-.tab-btn.active { background: var(--accent); color: #000; font-weight: 600; }
+.tab-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
 .tab-page { display: none; }
 .tab-page.active { display: block; }
 
@@ -68,6 +68,7 @@ body {
 .section {
   background: var(--card); border: 1px solid var(--border);
   border-radius: 16px; padding: 22px 26px; margin-bottom: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 .section-title {
   font-size: 16px; font-weight: 600; margin-bottom: 16px;
@@ -77,7 +78,7 @@ body {
 /* ── Daily Tracker ── */
 .habit-row {
   display: flex; align-items: center; padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid var(--border);
 }
 .habit-row:last-child { border-bottom: none; }
 .h-info { flex: 1; min-width: 0; }
@@ -93,10 +94,10 @@ body {
 }
 .dcb .dl { font-size: 9px; color: var(--muted); font-weight: 600; }
 .dcb .di { font-size: 14px; }
-.dcb.done { background: var(--green); border-color: var(--green); color: #000; }
-.dcb.done .dl { color: rgba(0,0,0,0.4); }
+.dcb.done { background: var(--green); border-color: var(--green); color: #fff; }
+.dcb.done .dl { color: rgba(255,255,255,0.7); }
 .dcb.miss { background: var(--red); border-color: var(--red); color: #fff; }
-.dcb.miss .dl { color: rgba(255,255,255,0.5); }
+.dcb.miss .dl { color: #fff; }
 .dcb.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 .h-score { width: 40px; text-align: center; font-weight: 700; font-size: 14px; color: var(--muted); margin-left: 8px; }
 .total-bar {
@@ -134,7 +135,7 @@ body {
   writing-mode: vertical-lr; transform: rotate(180deg);
   font-size: 10px; font-weight: 700; text-transform: uppercase;
   letter-spacing: 1.5px; color: var(--text);
-  background: rgba(255,255,255,0.02);
+  background: var(--bg);
   border-right: 2px solid var(--border);
   padding: 8px 2px;
 }
@@ -154,26 +155,26 @@ body {
 .mq h3 { font-size: 12px; font-weight: 600; margin-bottom: 10px; }
 .mq .mob-tag { display: none; }
 
-.q1 { background: rgba(248,113,113,0.06); }
+.q1 { background: rgba(220,53,69,0.05); }
 .q1 h3 { color: var(--red); }
 .q1 .action-label { color: var(--red); }
 
-.q2 { background: rgba(96,165,250,0.06); }
+.q2 { background: rgba(0,122,255,0.05); }
 .q2 h3 { color: var(--blue); }
 .q2 .action-label { color: var(--blue); }
 
-.q3 { background: rgba(251,191,36,0.06); }
+.q3 { background: rgba(212,160,23,0.07); }
 .q3 h3 { color: var(--yellow); }
 .q3 .action-label { color: var(--yellow); }
 
-.q4 { background: rgba(113,113,122,0.06); }
+.q4 { background: rgba(134,134,139,0.07); }
 .q4 h3 { color: var(--muted); }
 .q4 .action-label { color: var(--muted); }
 
 .mi {
   display: flex; align-items: center; gap: 8px;
   padding: 5px 8px; margin-bottom: 3px;
-  background: rgba(255,255,255,0.04); border-radius: 6px; font-size: 13px;
+  background: var(--bg); border-radius: 6px; font-size: 13px;
 }
 .mi .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .q1 .dot { background: var(--red); } .q2 .dot { background: var(--blue); }
@@ -185,20 +186,20 @@ body {
 .mi .x:hover { color: var(--red); }
 .ar { display: flex; gap: 6px; margin-top: 10px; }
 .ar input {
-  flex: 1; min-width: 0; background: rgba(255,255,255,0.06);
+  flex: 1; min-width: 0; background: var(--bg);
   border: 1px solid var(--border); border-radius: 6px;
   padding: 7px 8px; color: var(--text); font-size: 12px; outline: none;
 }
 .ar input:focus { border-color: var(--accent); }
 .ar button {
-  background: var(--accent); border: none; color: #000;
+  background: var(--accent); border: none; color: #fff;
   width: 32px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 700; flex-shrink: 0;
 }
 
 /* ── Weekend to-do ── */
 .wt {
   display: flex; align-items: center; gap: 10px;
-  padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px;
+  padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 14px;
 }
 .wt:last-of-type { border-bottom: none; }
 .wcb {
@@ -206,7 +207,7 @@ body {
   border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;
   cursor: pointer; flex-shrink: 0; font-size: 13px; transition: all 0.12s; user-select: none;
 }
-.wcb.done { background: var(--green); border-color: var(--green); color: #000; }
+.wcb.done { background: var(--green); border-color: var(--green); color: #fff; }
 .wt .txt.done { text-decoration: line-through; color: var(--muted); }
 .wt .x {
   margin-left: auto; background: none; border: none;
@@ -216,7 +217,7 @@ body {
 
 /* ── Notes ── */
 textarea.notes {
-  width: 100%; min-height: 140px; background: rgba(255,255,255,0.03);
+  width: 100%; min-height: 140px; background: var(--bg);
   border: 1px solid var(--border); border-radius: 12px; padding: 14px;
   color: var(--text); font-size: 14px; font-family: inherit; resize: vertical; outline: none;
 }
@@ -227,7 +228,7 @@ textarea.notes:focus { border-color: var(--accent); }
    ══════════════════════════════════════ */
 .sched-block {
   display: flex; align-items: flex-start; gap: 12px;
-  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 10px 0; border-bottom: 1px solid var(--border);
 }
 .sched-block:last-child { border-bottom: none; }
 .sched-time {
@@ -245,7 +246,7 @@ textarea.notes:focus { border-color: var(--accent); }
 }
 
 .principle {
-  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 14px 0; border-bottom: 1px solid var(--border);
 }
 .principle:last-child { border-bottom: none; }
 .principle .p-title {
@@ -261,7 +262,7 @@ textarea.notes:focus { border-color: var(--accent); }
 
 .date-section {
   text-align: center; padding: 12px; margin-bottom: 16px;
-  background: rgba(129,140,248,0.08); border-radius: 10px;
+  background: rgba(88,86,214,0.08); border-radius: 10px;
   font-size: 14px; color: var(--accent);
 }
 
@@ -271,25 +272,25 @@ textarea.notes:focus { border-color: var(--accent); }
   background: var(--card); border-top: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
   gap: 10px; padding: 12px 16px; z-index: 100;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
 }
 .bottom-bar button {
   padding: 11px 24px; border: none; border-radius: 10px;
   font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s;
 }
 .bottom-bar button:active { transform: scale(0.97); }
-.btn-backup { background: var(--green); color: #000; }
+.btn-backup { background: var(--green); color: #fff; }
 .btn-backup:hover { opacity: 0.9; }
 .btn-restore { background: var(--border); color: var(--text); }
 .btn-restore:hover { background: var(--muted); }
 .btn-csv { background: var(--card); color: var(--text); border: 1px solid var(--border) !important; }
 .btn-csv:hover { background: var(--border); }
-#installBtn { display: none; background: var(--accent); color: #000; }
+#installBtn { display: none; background: var(--accent); color: #fff; }
 
 /* ── Toast ── */
 .toast {
   position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px);
-  background: var(--green); color: #000; padding: 12px 28px;
+  background: var(--green); color: #fff; padding: 12px 28px;
   border-radius: 12px; font-weight: 600; font-size: 14px; z-index: 200;
   transition: transform 0.3s; pointer-events: none;
 }
