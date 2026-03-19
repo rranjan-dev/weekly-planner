@@ -473,8 +473,8 @@ textarea.notes:focus { border-color: var(--accent); }
 </div>
 
 <script>
-/* ── Habits ── */
-const HABITS = [
+/* ── Habits — editable, stored in localStorage ── */
+const HABITS_DEF = [
   { n: 'Chanting',            d: '1h 15m' },
   { n: 'Reading Bhagavatam',  d: '20m' },
   { n: 'Spiritual Lecture',   d: '30m' },
@@ -484,7 +484,10 @@ const HABITS = [
   { n: 'LLD/HLD Revision',    d: '30m' },
   { n: 'Sleep by 10 PM',      d: '' },
 ];
-const HNAMES = HABITS.map(h => h.n);
+const HABITS_KEY = 'plannerHabits';
+function getHabits() { try { return JSON.parse(localStorage.getItem(HABITS_KEY)) || [...HABITS_DEF]; } catch { return [...HABITS_DEF]; } }
+function saveHabits(h) { localStorage.setItem(HABITS_KEY, JSON.stringify(h)); }
+function getHNames() { return getHabits().map(h => h.n); }
 
 /* ── Eisenhower defaults ── */
 const QS = [
@@ -550,8 +553,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 /* ── Daily Tracker ── */
 function renderDaily() {
   const el=document.getElementById('dailyBody'), d=wkData(), chk=d.chk||{}, ti=todayIdx();
+  const habits=getHabits(), hnames=getHNames();
   let h='';
-  HABITS.forEach(hab => {
+  habits.forEach((hab,hi) => {
     const done=DAYS.reduce((s,_,i)=>s+(chk[`${hab.n}_${i}`]===1?1:0),0);
     h+=`<div class="habit-row"><div class="h-info"><div class="h-name">${hab.n}</div>${hab.d?`<div class="h-dur">${hab.d}</div>`:''}</div><div class="h-days">`;
     DAYS.forEach((_,i)=>{
@@ -561,12 +565,35 @@ function renderDaily() {
       const ico=v===1?'✓':v===2?'✕':'';
       h+=`<div class="dcb ${cls}" onclick="cyc('${hab.n.replace(/'/g,"\\'")}',${i})"><span class="dl">${DL[i]}</span><span class="di">${ico}</span></div>`;
     });
-    h+=`</div><div class="h-score">${done}/7</div></div>`;
+    h+=`</div><div class="h-score">${done}/7</div>`;
+    h+=`<button class="x" style="margin-left:4px" onclick="rmHabit(${hi})">&times;</button>`;
+    h+=`</div>`;
   });
-  const total=HNAMES.reduce((s,n)=>s+DAYS.reduce((s2,_,i)=>s2+((chk[`${n}_${i}`]===1)?1:0),0),0);
-  const pct=Math.round(total/(HNAMES.length*7)*100);
-  h+=`<div class="total-bar">Week: <strong>${pct}%</strong> (${total}/${HNAMES.length*7})</div>`;
+  const total=hnames.reduce((s,n)=>s+DAYS.reduce((s2,_,i)=>s2+((chk[`${n}_${i}`]===1)?1:0),0),0);
+  const possible=hnames.length*7||1;
+  const pct=Math.round(total/possible*100);
+  h+=`<div class="total-bar">Week: <strong>${pct}%</strong> (${total}/${hnames.length*7})</div>`;
+  h+=`<div class="ar" style="margin-top:12px"><input id="hab_name" placeholder="Habit name" style="flex:2" onkeydown="if(event.key==='Enter')addHabit()">`;
+  h+=`<input id="hab_dur" placeholder="Duration" style="flex:1">`;
+  h+=`<button onclick="addHabit()">+</button></div>`;
   el.innerHTML=h; updateStats(chk);
+}
+
+function addHabit() {
+  const n=document.getElementById('hab_name').value.trim();
+  const d=document.getElementById('hab_dur').value.trim();
+  if(!n) return;
+  const habits=getHabits();
+  habits.push({n:n, d:d});
+  saveHabits(habits);
+  renderDaily();
+}
+
+function rmHabit(idx) {
+  const habits=getHabits();
+  habits.splice(idx,1);
+  saveHabits(habits);
+  renderDaily();
 }
 
 function cyc(name,di) {
@@ -576,12 +603,13 @@ function cyc(name,di) {
 }
 
 function updateStats(chk) {
-  const total=HNAMES.reduce((s,n)=>s+DAYS.reduce((s2,_,i)=>s2+((chk[`${n}_${i}`]===1)?1:0),0),0);
-  const possible=HNAMES.length*7;
+  const hnames=getHNames();
+  const total=hnames.reduce((s,n)=>s+DAYS.reduce((s2,_,i)=>s2+((chk[`${n}_${i}`]===1)?1:0),0),0);
+  const possible=hnames.length*7||1;
   document.getElementById('sDone').textContent=total;
   document.getElementById('sScor').textContent=Math.round(total/possible*100)+'%';
   let streak=0; const ti=todayIdx();
-  if(ti>=0){for(let dd=ti;dd>=0;dd--){if(HNAMES.every(n=>chk[`${n}_${dd}`]===1))streak++;else break;}}
+  if(ti>=0){for(let dd=ti;dd>=0;dd--){if(hnames.every(n=>chk[`${n}_${dd}`]===1))streak++;else break;}}
   document.getElementById('sStrk').textContent=streak;
 }
 
@@ -833,7 +861,7 @@ function renderDate() {
 
 /* ── Backup / Restore ── */
 function backup() {
-  const all={ planner: loadAll(), schedules: loadSched() };
+  const all={ planner: loadAll(), schedules: loadSched(), habits: getHabits() };
   const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url;
@@ -848,8 +876,10 @@ document.getElementById('fileInput').addEventListener('change',e=>{
   reader.onload=ev=>{
     try{
       const data=JSON.parse(ev.target.result);
-      if(data.planner && data.schedules) {
-        saveAll(data.planner); saveSched(data.schedules);
+      if(data.planner) {
+        saveAll(data.planner);
+        if(data.schedules) saveSched(data.schedules);
+        if(data.habits) saveHabits(data.habits);
       } else { saveAll(data); }
       toast('Data restored!'); renderAll();
     }
@@ -862,7 +892,7 @@ document.getElementById('fileInput').addEventListener('change',e=>{
 function exportCSV() {
   const chk=wkData().chk||{};
   let csv='Activity,Duration,'+DAYS.join(',')+',Score\n';
-  HABITS.forEach(h=>{
+  getHabits().forEach(h=>{
     csv+=[`"${h.n}"`,h.d||'-',...DAYS.map((_,i)=>{const v=chk[`${h.n}_${i}`]||0;return v===1?'Done':v===2?'Missed':'-';}),
       DAYS.reduce((s,_,i)=>s+(chk[`${h.n}_${i}`]===1?1:0),0)+'/7'].join(',')+'\n';
   });
