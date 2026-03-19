@@ -373,6 +373,35 @@ textarea.notes:focus { border-color: var(--accent); }
   .tab-page { display: block !important; page-break-before: always; }
 }
 
+/* ── Settings overlay ── */
+.overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.overlay-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px; width: 100%; max-width: 560px;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+.setup-code {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px; margin: 10px 0;
+  font-size: 11px; line-height: 1.5; overflow-x: auto;
+  font-family: 'SF Mono', Menlo, monospace;
+  color: var(--text); white-space: pre; display: block;
+}
+.sync-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--muted); display: inline-block;
+}
+.sync-dot.ok { background: var(--green); }
+.sync-dot.syncing { background: var(--yellow); animation: pulse 1s infinite; }
+.sync-dot.error { background: var(--red); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
 #fileInput { display: none; }
 </style>
 </head>
@@ -469,7 +498,79 @@ textarea.notes:focus { border-color: var(--accent); }
   <button class="btn-backup" onclick="backup()">&#8595; Backup</button>
   <button class="btn-restore" onclick="document.getElementById('fileInput').click()">&#8593; Restore</button>
   <button class="btn-csv" onclick="exportCSV()">CSV</button>
+  <button onclick="toggleSettings()" style="background:var(--border);color:var(--text)">&#9881;</button>
+  <span id="syncDot" class="sync-dot" title="Sync status"></span>
   <button id="installBtn" onclick="installApp()">&#8681; Install App</button>
+</div>
+
+<!-- ══════ SETTINGS OVERLAY ══════ -->
+<div id="settingsOverlay" class="overlay" style="display:none">
+  <div class="overlay-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="font-size:18px;font-weight:700">Settings</h2>
+      <button onclick="toggleSettings()" style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer">&times;</button>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Google Sheets Sync URL</label>
+      <input id="syncUrlInput" class="s-input" style="width:100%" placeholder="Paste your Apps Script URL here...">
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button class="s-btn" onclick="saveSyncUrl()">Save & Sync</button>
+        <button class="s-btn s-btn-reset" onclick="clearSyncUrl()">Disconnect</button>
+      </div>
+      <div id="syncStatus" style="margin-top:8px;font-size:12px;color:var(--muted)"></div>
+    </div>
+
+    <div style="border-top:1px solid var(--border);padding-top:14px">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:10px">Setup Instructions (one-time, 5 min)</h3>
+      <ol style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:18px">
+        <li>Open <a href="https://sheets.google.com" target="_blank" style="color:var(--accent)">Google Sheets</a> → Create a blank sheet</li>
+        <li>Name it "Weekly Planner Data" (optional)</li>
+        <li>In Row 1, type: <strong>Key</strong> in A1, <strong>Data</strong> in B1, <strong>Updated</strong> in C1</li>
+        <li>Go to <strong>Extensions → Apps Script</strong></li>
+        <li>Delete any code there, paste this:</li>
+      </ol>
+      <pre class="setup-code">function doGet(e) {
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rows = sh.getDataRange().getValues();
+  var data = {};
+  for (var i = 1; i &lt; rows.length; i++) {
+    if (rows[i][0]) try { data[rows[i][0]] = JSON.parse(rows[i][1]); } catch(e) {}
+  }
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var payload = JSON.parse(e.postData.contents);
+  var keys = Object.keys(payload);
+  for (var k = 0; k &lt; keys.length; k++) {
+    var key = keys[k], val = JSON.stringify(payload[key]);
+    var rows = sh.getDataRange().getValues();
+    var found = false;
+    for (var i = 1; i &lt; rows.length; i++) {
+      if (rows[i][0] === key) {
+        sh.getRange(i+1,2).setValue(val);
+        sh.getRange(i+1,3).setValue(new Date().toISOString());
+        found = true; break;
+      }
+    }
+    if (!found) sh.appendRow([key, val, new Date().toISOString()]);
+  }
+  return ContentService.createTextOutput(JSON.stringify({ok:true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+      <ol start="6" style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:18px">
+        <li>Click <strong>Deploy → New deployment</strong></li>
+        <li>Type: <strong>Web app</strong></li>
+        <li>Execute as: <strong>Me</strong></li>
+        <li>Who has access: <strong>Anyone</strong></li>
+        <li>Click <strong>Deploy</strong> → Authorize when prompted</li>
+        <li>Copy the <strong>Web app URL</strong> → Paste it above</li>
+      </ol>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -900,6 +1001,100 @@ function exportCSV() {
   const a=document.createElement('a'); a.href=url; a.download=`planner-${wk()}.csv`;
   a.click(); URL.revokeObjectURL(url); toast('CSV exported!');
 }
+
+/* =============================================================
+   GOOGLE SHEETS SYNC
+   Saves all data to a Google Sheet via Apps Script.
+   Debounced: waits 2s after last change before syncing.
+   ============================================================= */
+const SYNC_URL_KEY = 'plannerSyncUrl';
+let syncTimer = null;
+
+function getSyncUrl() { return localStorage.getItem(SYNC_URL_KEY) || ''; }
+
+function toggleSettings() {
+  const el = document.getElementById('settingsOverlay');
+  const visible = el.style.display !== 'none';
+  el.style.display = visible ? 'none' : 'flex';
+  if (!visible) {
+    document.getElementById('syncUrlInput').value = getSyncUrl();
+    document.getElementById('syncStatus').textContent = getSyncUrl() ? 'Connected' : 'Not connected';
+  }
+}
+
+function saveSyncUrl() {
+  const url = document.getElementById('syncUrlInput').value.trim();
+  if (!url) { toast('Please paste the Apps Script URL'); return; }
+  localStorage.setItem(SYNC_URL_KEY, url);
+  document.getElementById('syncStatus').textContent = 'Saved! Syncing now...';
+  syncToSheet();
+  loadFromSheet();
+}
+
+function clearSyncUrl() {
+  localStorage.removeItem(SYNC_URL_KEY);
+  document.getElementById('syncUrlInput').value = '';
+  document.getElementById('syncStatus').textContent = 'Disconnected';
+  setSyncDot('');
+  toast('Sync disconnected');
+}
+
+function setSyncDot(state) {
+  const dot = document.getElementById('syncDot');
+  dot.className = 'sync-dot' + (state ? ' ' + state : '');
+}
+
+function scheduleSync() {
+  if (!getSyncUrl()) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncToSheet, 2000);
+}
+
+function syncToSheet() {
+  const url = getSyncUrl();
+  if (!url) return;
+  setSyncDot('syncing');
+  const payload = {
+    weeklyData: loadAll(),
+    habits: getHabits(),
+    schedules: loadSched()
+  };
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(() => setSyncDot('ok'))
+  .catch(() => setSyncDot('error'));
+}
+
+function loadFromSheet() {
+  const url = getSyncUrl();
+  if (!url) return;
+  setSyncDot('syncing');
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      if (data.weeklyData) saveAll(data.weeklyData);
+      if (data.habits) saveHabits(data.habits);
+      if (data.schedules) saveSched(data.schedules);
+      setSyncDot('ok');
+      renderAll();
+    })
+    .catch(() => setSyncDot('error'));
+}
+
+/* Hook sync into all save functions */
+const _origSaveAll = saveAll;
+saveAll = function(d) { _origSaveAll(d); scheduleSync(); };
+const _origSaveHabits = saveHabits;
+saveHabits = function(h) { _origSaveHabits(h); scheduleSync(); };
+const _origSaveSched = saveSched;
+saveSched = function(d) { _origSaveSched(d); scheduleSync(); };
+
+/* Load from Sheet on startup if URL is configured */
+if (getSyncUrl()) { setTimeout(loadFromSheet, 500); }
 
 /* ── PWA ── */
 let deferredPrompt;
