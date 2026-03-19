@@ -2,7 +2,7 @@
   "name": "Weekly Planner & Tracker",
   "short_name": "Planner",
   "description": "Daily habit tracker, Eisenhower Matrix, and weekend planner",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#0f1117",
   "theme_color": "#0f1117",
