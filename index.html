@@ -231,6 +231,11 @@ textarea.notes:focus { border-color: var(--accent); }
   padding: 10px 0; border-bottom: 1px solid var(--border);
 }
 .sched-block:last-child { border-bottom: none; }
+.sched-block .x {
+  margin-left: auto; background: none; border: none;
+  color: var(--muted); cursor: pointer; font-size: 18px; padding: 0 4px; flex-shrink: 0;
+}
+.sched-block .x:hover { color: var(--red); }
 .sched-time {
   min-width: 80px; font-size: 13px; font-weight: 600;
   color: var(--accent); padding-top: 2px; white-space: nowrap;
@@ -259,6 +264,23 @@ textarea.notes:focus { border-color: var(--accent); }
 .p-highlight { color: var(--green); font-weight: 600; }
 .p-warn { color: var(--red); font-weight: 600; }
 .p-info { color: var(--blue); font-weight: 600; }
+
+.s-input {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; color: var(--text); font-size: 13px; outline: none;
+}
+.s-input:focus { border-color: var(--accent); }
+.s-btn {
+  background: var(--accent); border: none; color: #fff;
+  padding: 8px 14px; border-radius: 8px; cursor: pointer;
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+}
+.s-btn-hdr { background: var(--pink); }
+.s-btn-reset {
+  background: transparent; color: var(--muted); border: 1px solid var(--border);
+  font-size: 12px; padding: 6px 12px;
+}
+.s-btn-reset:hover { color: var(--red); border-color: var(--red); }
 
 .date-section {
   text-align: center; padding: 12px; margin-bottom: 16px;
@@ -416,251 +438,29 @@ textarea.notes:focus { border-color: var(--accent); }
 
 </div>
 
-<!-- ══════ TAB 2: WEEKDAY SCHEDULE ══════ -->
+<!-- ══════ TAB 2: WEEKDAY SCHEDULE (rendered by JS) ══════ -->
 <div class="tab-page" id="tab-weekday">
   <div class="section">
     <div class="section-title">Weekday Schedule (Mon–Fri)</div>
     <div class="date-section" id="todayDate"></div>
-
-    <div class="sched-divider">Morning Block — Sacred Time</div>
-
-    <div class="sched-block">
-      <div class="sched-time">04:15 AM</div>
-      <div class="sched-desc">Wake up, freshen up <span class="dur">(15m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">04:30</div>
-      <div class="sched-desc">Chanting <span class="dur">(1hr 15m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">05:45</div>
-      <div class="sched-desc">Reading Bhagavatam <span class="dur">(20m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">06:05</div>
-      <div class="sched-desc">Spiritual Lecture <span class="dur">(30m)</span>
-        <span class="note">Can listen while getting ready / light stretching</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">06:35</div>
-      <div class="sched-desc">Physical Exercise <span class="dur">(40m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">07:15</div>
-      <div class="sched-desc">Shower + Get Ready <span class="dur">(30m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">07:45</div>
-      <div class="sched-desc">Breakfast <span class="dur">(20m)</span></div>
-    </div>
-
-    <div class="sched-divider">Learning & Work</div>
-
-    <div class="sched-block">
-      <div class="sched-time">08:00</div>
-      <div class="sched-desc">AI Morning Class <span class="dur">(1hr)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">09:00</div>
-      <div class="sched-desc">AI Practice <span class="dur">(30m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">09:30</div>
-      <div class="sched-desc">Office Work Begins <span class="dur">(8 hrs)</span>
-        <span class="note">Lunch break within office hours</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">05:30 PM</div>
-      <div class="sched-desc">Office Ends</div>
-    </div>
-
-    <div class="sched-divider">Evening — Growth & Relationships</div>
-
-    <div class="sched-block">
-      <div class="sched-time">05:30</div>
-      <div class="sched-desc">Transition / Light snack <span class="dur">(15m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">05:45</div>
-      <div class="sched-desc">DSA Revision <span class="dur">(30m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">06:15</div>
-      <div class="sched-desc">LLD/HLD Revision <span class="dur">(30m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">06:45</div>
-      <div class="sched-desc">Dinner <span class="dur">(30m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">07:15</div>
-      <div class="sched-desc">Family Call <span class="dur">(1hr)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">08:15</div>
-      <div class="sched-desc">Wife Call <span class="dur">(45m)</span></div>
-    </div>
-
-    <div class="sched-divider">Wind Down</div>
-
-    <div class="sched-block">
-      <div class="sched-time">09:00</div>
-      <div class="sched-desc">Free Time / Relaxation <span class="dur">(30–45m)</span>
-        <span class="note">YouTube, comedy, motivational content</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">09:30</div>
-      <div class="sched-desc">Wind down, sleep prep</div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">10:00 PM</div>
-      <div class="sched-desc">Sleep <span class="dur">(6.5 hrs → wake 4:15 AM)</span></div>
-    </div>
+    <div id="weekdayBody"></div>
   </div>
 </div>
 
-<!-- ══════ TAB 3: WEEKEND SCHEDULE ══════ -->
+<!-- ══════ TAB 3: WEEKEND SCHEDULE (rendered by JS) ══════ -->
 <div class="tab-page" id="tab-weekend-sched">
   <div class="section">
     <div class="section-title">Weekend Schedule (Sat & Sun)</div>
     <div class="date-section">Weekdays are for maintenance, weekends are for growth.</div>
-
-    <div class="sched-divider">Morning Block</div>
-
-    <div class="sched-block">
-      <div class="sched-time">05:00 AM</div>
-      <div class="sched-desc">Wake up <span class="dur">(slightly later)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">05:15</div>
-      <div class="sched-desc">Chanting <span class="dur">(1hr 15m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">06:30</div>
-      <div class="sched-desc">Bhagavatam Reading <span class="dur">(30m — extended)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">07:00</div>
-      <div class="sched-desc">Spiritual Lecture <span class="dur">(30m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">07:30</div>
-      <div class="sched-desc">Physical Exercise <span class="dur">(45m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">08:15</div>
-      <div class="sched-desc">Shower + Breakfast <span class="dur">(45m)</span></div>
-    </div>
-
-    <div class="sched-divider">Deep Work — Interview Prep & Growth</div>
-
-    <div class="sched-block">
-      <div class="sched-time">09:00</div>
-      <div class="sched-desc">NEW DSA Topics / Problem Solving <span class="dur">(1.5 hrs)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">10:30</div>
-      <div class="sched-desc">Break <span class="dur">(15m)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">10:45</div>
-      <div class="sched-desc">NEW LLD/HLD Concepts + System Design <span class="dur">(1.5 hrs)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">12:15 PM</div>
-      <div class="sched-desc">Lunch + Rest <span class="dur">(1hr)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">01:15</div>
-      <div class="sched-desc">AI Practice / Side Projects <span class="dur">(1.5 hrs)</span></div>
-    </div>
-
-    <div class="sched-divider">Afternoon — Recharge & Relationships</div>
-
-    <div class="sched-block">
-      <div class="sched-time">02:45</div>
-      <div class="sched-desc">Free Time / Entertainment <span class="dur">(1.5–2 hrs)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">04:30</div>
-      <div class="sched-desc">Family Call <span class="dur">(1 hr)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">05:30</div>
-      <div class="sched-desc">Wife Call <span class="dur">(1 hr — extended on weekends)</span></div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">06:30</div>
-      <div class="sched-desc">Dinner + Relaxation <span class="dur">(1.5 hrs)</span></div>
-    </div>
-
-    <div class="sched-divider">Wind Down</div>
-
-    <div class="sched-block">
-      <div class="sched-time">08:00</div>
-      <div class="sched-desc">Light reading / journaling / planning next week</div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">09:00</div>
-      <div class="sched-desc">Wind down</div>
-    </div>
-    <div class="sched-block">
-      <div class="sched-time">09:30 PM</div>
-      <div class="sched-desc">Sleep</div>
-    </div>
+    <div id="weekendSchedBody"></div>
   </div>
 </div>
 
-<!-- ══════ TAB 4: PRINCIPLES ══════ -->
+<!-- ══════ TAB 4: PRINCIPLES (rendered by JS) ══════ -->
 <div class="tab-page" id="tab-principles">
   <div class="section">
     <div class="section-title">Key Principles for a Productive Routine</div>
-
-    <div class="principle">
-      <div class="p-title">Weekdays = Maintenance, Weekends = Growth</div>
-      <div class="p-body">Weekday cognitive budget is spent on office work. Don't try to learn new DSA patterns at 6 PM after 8 hours of work — <span class="p-highlight">revise what you know</span>. Save deep learning for fresh weekend mornings.</div>
-    </div>
-
-    <div class="principle">
-      <div class="p-title">Protect the Morning Block (4:30–7:15)</div>
-      <div class="p-body">All spiritual + exercise done before the world demands your attention. This is your <span class="p-highlight">"sacred time"</span> — no phone, no distractions. If this goes well, the rest of the day follows. If you skip this, everything cascades.</div>
-    </div>
-
-    <div class="principle">
-      <div class="p-title">Sleep is Non-Negotiable</div>
-      <div class="p-body"><span class="p-warn">6.5 hours is your minimum.</span> If you sleep at 10:30 instead of 10:00, wake at 4:45 — don't sacrifice sleep. A tired mind will make your 16 waking hours inefficient.</div>
-    </div>
-
-    <div class="principle">
-      <div class="p-title">Cluster Calls Together</div>
-      <div class="p-body">Family + wife calls back-to-back avoids context switching. Don't scatter them across the evening — <span class="p-info">batch relationships time</span> like you batch work.</div>
-    </div>
-
-    <div class="principle">
-      <div class="p-title">Relaxation is Intentional, Not Leftover</div>
-      <div class="p-body">30 minutes of guilt-free entertainment is <span class="p-highlight">scheduled, not squeezed in</span>. When it's on the calendar, you enjoy it. When it's stolen time, you feel guilty and it doesn't recharge you.</div>
-    </div>
-
-    <div class="principle">
-      <div class="p-title">Limit YouTube Shorts to 30 Minutes</div>
-      <div class="p-body"><span class="p-warn">Shorts are designed to be addictive. Set a timer.</span> This is your Q4 (Not Urgent, Not Important) — the Eisenhower Matrix says eliminate or strictly limit. Don't let 30 minutes become 2 hours.</div>
-    </div>
-
-    <div class="principle">
-      <div class="p-title">The 2-Minute Rule for Transitions</div>
-      <div class="p-body">Between activities, take 2 minutes to close the previous context mentally. <span class="p-info">Don't carry office stress into family calls, or DSA frustration into relaxation time.</span> A clean mental break between blocks makes each block more effective.</div>
-    </div>
-
-    <div class="principle">
-      <div class="p-title">Weekly, Not Daily, Perfection</div>
-      <div class="p-body">You will miss a day. That's fine. <span class="p-highlight">Aim for 6/7 days</span> on your non-negotiables. The streak mentality helps, but don't let one bad day spiral into "I've already failed this week."</div>
-    </div>
-
-    <div class="principle">
-      <div class="p-title">Consistency Over Intensity</div>
-      <div class="p-body">The key differentiator between people who sustain this and those who burn out: <span class="p-highlight">it's better to do 80% of this schedule for 6 months than 100% for 2 weeks and then collapse.</span> Start with this plan, track for 2 weeks, then adjust based on what you learn about your energy patterns.</div>
-    </div>
-
+    <div id="principlesBody"></div>
   </div>
 </div>
 
@@ -838,6 +638,186 @@ function togWk(i) { const d=wkData(); if(!d.wk)d.wk=WK_DEF.map(t=>({t,d:false}))
 function addWk() { const inp=document.getElementById('wiAdd'),v=inp.value.trim(); if(!v)return; const d=wkData(); if(!d.wk)d.wk=WK_DEF.map(t=>({t,d:false})); d.wk.push({t:v,d:false}); saveWeek(d); inp.value=''; renderWeekend(); }
 function rmWk(i) { const d=wkData(); if(!d.wk)d.wk=WK_DEF.map(t=>({t,d:false})); d.wk.splice(i,1); saveWeek(d); renderWeekend(); }
 
+/* =============================================================
+   SCHEDULE & PRINCIPLES — editable, stored in localStorage
+   key: 'plannerSchedules' (not per-week, these are global)
+   ============================================================= */
+const SCHED_KEY = 'plannerSchedules';
+function loadSched() { try { return JSON.parse(localStorage.getItem(SCHED_KEY))||{}; } catch{return {};} }
+function saveSched(d) { localStorage.setItem(SCHED_KEY, JSON.stringify(d)); }
+
+const WEEKDAY_DEF = [
+  {h:'Morning Block — Sacred Time'},
+  {t:'04:15 AM', d:'Wake up, freshen up (15m)'},
+  {t:'04:30', d:'Chanting (1hr 15m)'},
+  {t:'05:45', d:'Reading Bhagavatam (20m)'},
+  {t:'06:05', d:'Spiritual Lecture (30m) — can listen while getting ready'},
+  {t:'06:35', d:'Physical Exercise (40m)'},
+  {t:'07:15', d:'Shower + Get Ready (30m)'},
+  {t:'07:45', d:'Breakfast (20m)'},
+  {h:'Learning & Work'},
+  {t:'08:00', d:'AI Morning Class (1hr)'},
+  {t:'09:00', d:'AI Practice (30m)'},
+  {t:'09:30', d:'Office Work Begins (8 hrs) — lunch within office hours'},
+  {t:'05:30 PM', d:'Office Ends'},
+  {h:'Evening — Growth & Relationships'},
+  {t:'05:30', d:'Transition / Light snack (15m)'},
+  {t:'05:45', d:'DSA Revision (30m)'},
+  {t:'06:15', d:'LLD/HLD Revision (30m)'},
+  {t:'06:45', d:'Dinner (30m)'},
+  {t:'07:15', d:'Family Call (1hr)'},
+  {t:'08:15', d:'Wife Call (45m)'},
+  {h:'Wind Down'},
+  {t:'09:00', d:'Free Time / Relaxation (30–45m)'},
+  {t:'09:30', d:'Wind down, sleep prep'},
+  {t:'10:00 PM', d:'Sleep (6.5 hrs → wake 4:15 AM)'},
+];
+
+const WEEKEND_SCHED_DEF = [
+  {h:'Morning Block'},
+  {t:'05:00 AM', d:'Wake up (slightly later)'},
+  {t:'05:15', d:'Chanting (1hr 15m)'},
+  {t:'06:30', d:'Bhagavatam Reading (30m — extended)'},
+  {t:'07:00', d:'Spiritual Lecture (30m)'},
+  {t:'07:30', d:'Physical Exercise (45m)'},
+  {t:'08:15', d:'Shower + Breakfast (45m)'},
+  {h:'Deep Work — Interview Prep & Growth'},
+  {t:'09:00', d:'NEW DSA Topics / Problem Solving (1.5 hrs)'},
+  {t:'10:30', d:'Break (15m)'},
+  {t:'10:45', d:'NEW LLD/HLD Concepts + System Design (1.5 hrs)'},
+  {t:'12:15 PM', d:'Lunch + Rest (1hr)'},
+  {t:'01:15', d:'AI Practice / Side Projects (1.5 hrs)'},
+  {h:'Afternoon — Recharge & Relationships'},
+  {t:'02:45', d:'Free Time / Entertainment (1.5–2 hrs)'},
+  {t:'04:30', d:'Family Call (1 hr)'},
+  {t:'05:30', d:'Wife Call (1 hr — extended on weekends)'},
+  {t:'06:30', d:'Dinner + Relaxation (1.5 hrs)'},
+  {h:'Wind Down'},
+  {t:'08:00', d:'Light reading / journaling / planning next week'},
+  {t:'09:00', d:'Wind down'},
+  {t:'09:30 PM', d:'Sleep'},
+];
+
+const PRINCIPLES_DEF = [
+  {title:'Weekdays = Maintenance, Weekends = Growth', body:'Weekday cognitive budget is spent on office work. Revise what you know on weekdays. Save deep learning for fresh weekend mornings.'},
+  {title:'Protect the Morning Block (4:30–7:15)', body:'All spiritual + exercise done before the world demands your attention. This is your "sacred time" — no phone, no distractions.'},
+  {title:'Sleep is Non-Negotiable', body:'6.5 hours is your minimum. If you sleep at 10:30 instead of 10:00, wake at 4:45 — don\'t sacrifice sleep. A tired mind will make your 16 waking hours inefficient.'},
+  {title:'Cluster Calls Together', body:'Family + wife calls back-to-back avoids context switching. Batch relationships time like you batch work.'},
+  {title:'Relaxation is Intentional, Not Leftover', body:'30 minutes of guilt-free entertainment is scheduled, not squeezed in. When it\'s on the calendar, you enjoy it.'},
+  {title:'Limit YouTube Shorts to 30 Minutes', body:'Shorts are designed to be addictive. Set a timer. This is your Q4 — eliminate or strictly limit.'},
+  {title:'The 2-Minute Rule for Transitions', body:'Between activities, take 2 minutes to close the previous context mentally. Don\'t carry office stress into family calls, or DSA frustration into relaxation time.'},
+  {title:'Weekly, Not Daily, Perfection', body:'You will miss a day. Aim for 6/7 days on your non-negotiables. Don\'t let one bad day spiral into "I\'ve already failed this week."'},
+  {title:'Consistency Over Intensity', body:'It\'s better to do 80% of this schedule for 6 months than 100% for 2 weeks and then collapse. Track for 2 weeks, then adjust.'},
+];
+
+function getSchedList(key, def) { const s=loadSched(); return s[key] || [...def]; }
+function setSchedList(key, arr) { const s=loadSched(); s[key]=arr; saveSched(s); }
+
+/* ── Generic schedule renderer ── */
+function renderSched(elId, lsKey, def) {
+  const el=document.getElementById(elId);
+  const items=getSchedList(lsKey, def);
+  let h='';
+  items.forEach((item,i)=>{
+    if (item.h) {
+      h+=`<div class="sched-divider">${item.h}<button class="x" style="float:right" onclick="rmSched('${lsKey}',${i},'${elId}')">&times;</button></div>`;
+    } else {
+      h+=`<div class="sched-block"><div class="sched-time">${item.t}</div><div class="sched-desc">${item.d}</div>`;
+      h+=`<button class="x" onclick="rmSched('${lsKey}',${i},'${elId}')">&times;</button></div>`;
+    }
+  });
+  h+=`<div style="margin-top:14px; display:flex; gap:6px; flex-wrap:wrap; align-items:center">`;
+  h+=`<input id="${elId}_time" placeholder="Time (e.g. 08:00)" style="width:90px" class="s-input">`;
+  h+=`<input id="${elId}_desc" placeholder="Description" style="flex:1; min-width:140px" class="s-input"`;
+  h+=` onkeydown="if(event.key==='Enter')addSched('${lsKey}','${elId}')">`;
+  h+=`<button class="s-btn" onclick="addSched('${lsKey}','${elId}')">+ Item</button>`;
+  h+=`<button class="s-btn s-btn-hdr" onclick="addSchedHdr('${lsKey}','${elId}')">+ Header</button>`;
+  h+=`</div>`;
+  h+=`<div style="margin-top:8px; text-align:right"><button class="s-btn s-btn-reset" onclick="resetSched('${lsKey}','${elId}')">Reset to defaults</button></div>`;
+  el.innerHTML=h;
+}
+
+function addSched(lsKey, elId) {
+  const t=document.getElementById(elId+'_time').value.trim();
+  const d=document.getElementById(elId+'_desc').value.trim();
+  if(!d) return;
+  const items=getSchedList(lsKey, []);
+  items.push({t:t, d:d});
+  setSchedList(lsKey, items);
+  renderSched(elId, lsKey, []);
+}
+
+function addSchedHdr(lsKey, elId) {
+  const d=document.getElementById(elId+'_desc').value.trim();
+  if(!d) return;
+  const items=getSchedList(lsKey, []);
+  items.push({h:d});
+  setSchedList(lsKey, items);
+  document.getElementById(elId+'_desc').value='';
+  renderSched(elId, lsKey, []);
+}
+
+function rmSched(lsKey, idx, elId) {
+  const items=getSchedList(lsKey, []);
+  items.splice(idx,1);
+  setSchedList(lsKey, items);
+  renderSched(elId, lsKey, []);
+}
+
+function resetSched(lsKey, elId) {
+  const def = lsKey==='weekday'? WEEKDAY_DEF : lsKey==='weekendSched'? WEEKEND_SCHED_DEF : PRINCIPLES_DEF;
+  setSchedList(lsKey, [...def]);
+  renderSched(elId, lsKey, def);
+  toast('Reset to defaults!');
+}
+
+/* ── Principles renderer ── */
+function renderPrinciples() {
+  const el=document.getElementById('principlesBody');
+  const items=getSchedList('principles', PRINCIPLES_DEF);
+  let h='';
+  items.forEach((p,i)=>{
+    h+=`<div class="principle"><div class="p-title">${p.title}<button class="x" style="margin-left:auto;float:right" onclick="rmPrinciple(${i})">&times;</button></div>`;
+    h+=`<div class="p-body">${p.body}</div></div>`;
+  });
+  h+=`<div style="margin-top:14px; display:flex; flex-direction:column; gap:6px">`;
+  h+=`<input id="princ_title" placeholder="Principle title" class="s-input">`;
+  h+=`<input id="princ_body" placeholder="Description / explanation" class="s-input" onkeydown="if(event.key==='Enter')addPrinciple()">`;
+  h+=`<div style="display:flex; gap:6px"><button class="s-btn" onclick="addPrinciple()">+ Add Principle</button>`;
+  h+=`<button class="s-btn s-btn-reset" onclick="resetPrinciples()">Reset to defaults</button></div>`;
+  h+=`</div>`;
+  el.innerHTML=h;
+}
+
+function addPrinciple() {
+  const t=document.getElementById('princ_title').value.trim();
+  const b=document.getElementById('princ_body').value.trim();
+  if(!t) return;
+  const items=getSchedList('principles', PRINCIPLES_DEF);
+  items.push({title:t, body:b||''});
+  setSchedList('principles', items);
+  renderPrinciples();
+}
+
+function rmPrinciple(i) {
+  const items=getSchedList('principles', PRINCIPLES_DEF);
+  items.splice(i,1);
+  setSchedList('principles', items);
+  renderPrinciples();
+}
+
+function resetPrinciples() {
+  setSchedList('principles', [...PRINCIPLES_DEF]);
+  renderPrinciples();
+  toast('Reset to defaults!');
+}
+
+function renderSchedules() {
+  renderSched('weekdayBody','weekday',WEEKDAY_DEF);
+  renderSched('weekendSchedBody','weekendSched',WEEKEND_SCHED_DEF);
+  renderPrinciples();
+}
+
 /* ── Notes ── */
 function renderNotes() {
   const area=document.getElementById('notesArea');
@@ -853,7 +833,7 @@ function renderDate() {
 
 /* ── Backup / Restore ── */
 function backup() {
-  const all=loadAll();
+  const all={ planner: loadAll(), schedules: loadSched() };
   const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url;
@@ -866,7 +846,13 @@ document.getElementById('fileInput').addEventListener('change',e=>{
   const file=e.target.files[0]; if(!file)return;
   const reader=new FileReader();
   reader.onload=ev=>{
-    try{ saveAll(JSON.parse(ev.target.result)); toast('Data restored!'); renderAll(); }
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(data.planner && data.schedules) {
+        saveAll(data.planner); saveSched(data.schedules);
+      } else { saveAll(data); }
+      toast('Data restored!'); renderAll();
+    }
     catch{ toast('Invalid file.'); }
   };
   reader.readAsText(file); e.target.value='';
@@ -895,7 +881,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').cat
 function go(d){weekOff+=d;renderAll();}
 function renderAll(){
   document.getElementById('wkLbl').textContent=wkRange();
-  renderDaily(); renderMatrix(); renderWeekend(); renderNotes(); renderDate();
+  renderDaily(); renderMatrix(); renderWeekend(); renderNotes(); renderDate(); renderSchedules();
 }
 renderAll();
 </script>
