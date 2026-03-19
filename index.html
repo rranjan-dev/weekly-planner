@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f1117">
+<meta name="apple-mobile-web-app-title" content="Planner">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+<title>Weekly Planner</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --border: #2a2d3a;
+  --text: #e4e4e7;
+  --muted: #71717a;
+  --accent: #818cf8;
+  --green: #34d399;
+  --red: #f87171;
+  --yellow: #fbbf24;
+  --blue: #60a5fa;
+  --pink: #f472b6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 24px 32px;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+.header { text-align: center; margin-bottom: 20px; }
+
+.header h1 {
+  font-size: 26px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+
+.week-nav {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+}
+
+.week-nav button {
+  background: var(--card); border: 1px solid var(--border); color: var(--text);
+  width: 40px; height: 40px; border-radius: 10px;
+  cursor: pointer; font-size: 18px; transition: background 0.15s;
+}
+
+.week-nav button:hover { background: var(--border); }
+
+.week-label { font-size: 15px; color: var(--muted); min-width: 240px; text-align: center; }
+
+.stats {
+  display: flex; justify-content: center; gap: 32px;
+  margin: 18px 0 28px; flex-wrap: wrap;
+}
+
+.stat { text-align: center; }
+.stat-val { font-size: 26px; font-weight: 700; color: var(--accent); }
+.stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+.section {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 22px 26px; margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 16px; font-weight: 600; margin-bottom: 16px;
+  color: var(--accent); text-transform: uppercase; letter-spacing: 0.8px;
+}
+
+/* ── Daily Tracker ── */
+.habit-row {
+  display: flex; align-items: center; padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.habit-row:last-child { border-bottom: none; }
+
+.h-info { flex: 1; min-width: 0; }
+.h-name { font-size: 15px; font-weight: 500; }
+.h-dur { font-size: 12px; color: var(--muted); }
+.h-days { display: flex; gap: 6px; }
+
+.dcb {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 2px solid var(--border); display: flex;
+  flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; user-select: none; -webkit-user-select: none;
+  transition: all 0.12s; gap: 1px;
+}
+
+.dcb .dl { font-size: 9px; color: var(--muted); font-weight: 600; }
+.dcb .di { font-size: 14px; }
+.dcb.done { background: var(--green); border-color: var(--green); color: #000; }
+.dcb.done .dl { color: rgba(0,0,0,0.4); }
+.dcb.miss { background: var(--red); border-color: var(--red); color: #fff; }
+.dcb.miss .dl { color: rgba(255,255,255,0.5); }
+.dcb.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+.h-score { width: 40px; text-align: center; font-weight: 700; font-size: 14px; color: var(--muted); margin-left: 8px; }
+
+.total-bar {
+  text-align: center; padding: 14px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 8px; font-size: 14px; color: var(--muted);
+}
+.total-bar strong { color: var(--accent); font-size: 20px; margin: 0 6px; }
+
+/* ── Eisenhower Matrix ── */
+.matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.mq {
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 16px; min-height: 140px; background: rgba(255,255,255,0.01);
+}
+
+.mq h3 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.mq .qs { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+
+.q1 { border-top: 3px solid var(--red); }    .q1 h3 { color: var(--red); }
+.q2 { border-top: 3px solid var(--blue); }   .q2 h3 { color: var(--blue); }
+.q3 { border-top: 3px solid var(--yellow); } .q3 h3 { color: var(--yellow); }
+.q4 { border-top: 3px solid var(--muted); }  .q4 h3 { color: var(--muted); }
+
+.mi {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; margin-bottom: 4px;
+  background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 13px;
+}
+
+.mi .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.q1 .dot { background: var(--red); }
+.q2 .dot { background: var(--blue); }
+.q3 .dot { background: var(--yellow); }
+.q4 .dot { background: var(--muted); }
+
+.mi .x {
+  margin-left: auto; background: none; border: none;
+  color: var(--muted); cursor: pointer; font-size: 18px; padding: 0 4px; line-height: 1;
+}
+.mi .x:hover { color: var(--red); }
+
+.ar { display: flex; gap: 6px; margin-top: 10px; }
+.ar input {
+  flex: 1; min-width: 0; background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; color: var(--text); font-size: 13px; outline: none;
+}
+.ar input:focus { border-color: var(--accent); }
+.ar button {
+  background: var(--accent); border: none; color: #000;
+  width: 34px; border-radius: 8px; cursor: pointer;
+  font-size: 18px; font-weight: 700; flex-shrink: 0;
+}
+
+/* ── Weekend ── */
+.wt {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px;
+}
+.wt:last-of-type { border-bottom: none; }
+
+.wcb {
+  width: 24px; height: 24px; border-radius: 7px;
+  border: 2px solid var(--border); display: flex;
+  align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; font-size: 13px;
+  transition: all 0.12s; user-select: none;
+}
+.wcb.done { background: var(--green); border-color: var(--green); color: #000; }
+.wt .txt.done { text-decoration: line-through; color: var(--muted); }
+.wt .x {
+  margin-left: auto; background: none; border: none;
+  color: var(--muted); cursor: pointer; font-size: 18px; padding: 0 4px;
+}
+.wt .x:hover { color: var(--red); }
+
+/* ── Notes ── */
+textarea.notes {
+  width: 100%; min-height: 140px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px; color: var(--text);
+  font-size: 14px; font-family: inherit; resize: vertical; outline: none;
+}
+textarea.notes:focus { border-color: var(--accent); }
+
+/* ── Bottom bar ── */
+.bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--card); border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 12px 16px; z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+}
+
+.bottom-bar button {
+  padding: 11px 24px; border: none; border-radius: 10px;
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+}
+.bottom-bar button:active { transform: scale(0.97); }
+
+.btn-backup { background: var(--green); color: #000; }
+.btn-backup:hover { opacity: 0.9; }
+.btn-restore { background: var(--border); color: var(--text); }
+.btn-restore:hover { background: var(--muted); }
+.btn-csv { background: var(--card); color: var(--text); border: 1px solid var(--border) !important; }
+.btn-csv:hover { background: var(--border); }
+
+#installBtn { display: none; background: var(--accent); color: #000; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; top: 20px; left: 50%;
+  transform: translateX(-50%) translateY(-80px);
+  background: var(--green); color: #000; padding: 12px 28px;
+  border-radius: 12px; font-weight: 600; font-size: 14px; z-index: 200;
+  transition: transform 0.3s; pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  body { padding: 14px; padding-bottom: 80px; }
+  .matrix { grid-template-columns: 1fr; }
+  .h-days { gap: 4px; }
+  .dcb { width: 30px; height: 30px; }
+  .dcb .dl { font-size: 8px; }
+  .dcb .di { font-size: 11px; }
+  .stats { gap: 18px; }
+  .section { padding: 16px; }
+  .bottom-bar { gap: 6px; padding: 10px; }
+  .bottom-bar button { padding: 10px 14px; font-size: 13px; }
+}
+
+@media print {
+  body { background: #fff; color: #222; }
+  .section { background: #fafafa; border-color: #ddd; }
+  .bottom-bar, .ar, .x { display: none !important; }
+}
+
+#fileInput { display: none; }
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+<input type="file" id="fileInput" accept=".json">
+
+<div class="header">
+  <h1>Weekly Planner & Tracker</h1>
+  <div class="week-nav">
+    <button onclick="go(-1)">&#8592;</button>
+    <span class="week-label" id="wkLbl"></span>
+    <button onclick="go(1)">&#8594;</button>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-val" id="sDone">0</div><div class="stat-lbl">Completed</div></div>
+  <div class="stat"><div class="stat-val" id="sScor">0%</div><div class="stat-lbl">This Week</div></div>
+  <div class="stat"><div class="stat-val" id="sStrk">0</div><div class="stat-lbl">Day Streak</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">&#9745; Daily Must-Do Tracker</div>
+  <div id="dailyBody"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">&#9638; Eisenhower Matrix</div>
+  <div class="matrix" id="matrixBody"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">&#9733; Weekend To-Do</div>
+  <div id="wkBody"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">&#9998; Weekly Notes & Reflections</div>
+  <textarea class="notes" id="notesArea" placeholder="What went well this week? What derailed me? Key takeaways. Plan for next week..."></textarea>
+</div>
+
+<div class="bottom-bar">
+  <button class="btn-backup" onclick="backup()">&#8595; Backup</button>
+  <button class="btn-restore" onclick="document.getElementById('fileInput').click()">&#8593; Restore</button>
+  <button class="btn-csv" onclick="exportCSV()">CSV</button>
+  <button id="installBtn" onclick="installApp()">&#8681; Install App</button>
+</div>
+
+<script>
+/* =============================================================
+   HABITS — flat list. Add / remove / reorder as you like.
+   ============================================================= */
+const HABITS = [
+  { n: 'Chanting',            d: '1h 15m' },
+  { n: 'Reading Bhagavatam',  d: '20m' },
+  { n: 'Spiritual Lecture',   d: '30m' },
+  { n: 'Physical Exercise',   d: '40–45m' },
+  { n: 'AI Morning Class',    d: '1h' },
+  { n: 'AI Practice',         d: '30m' },
+  { n: 'DSA Revision',        d: '30m' },
+  { n: 'LLD/HLD Revision',    d: '30m' },
+  { n: 'Family Call',          d: '1h' },
+  { n: 'Wife Call',            d: '40m–1h' },
+  { n: 'Sleep by 10 PM',      d: '' },
+  { n: 'Wake by 4:15 AM',     d: '' },
+];
+
+const HNAMES = HABITS.map(h => h.n);
+
+/* ── Eisenhower defaults ── */
+const QS = [
+  { id: 'q1', c: 'q1', t: 'Urgent & Important', s: 'Do First',
+    def: ['Office deliverables & deadlines', 'Chanting (daily non-negotiable)', 'Physical Exercise', 'Family / Wife calls'] },
+  { id: 'q2', c: 'q2', t: 'Important, Not Urgent', s: 'Schedule It',
+    def: ['DSA revision & new topics', 'LLD/HLD system design prep', 'AI class + practice', 'Bhagavatam reading', 'Spiritual lectures'] },
+  { id: 'q3', c: 'q3', t: 'Urgent, Not Important', s: 'Delegate / Batch',
+    def: ['Non-critical Slack/email', 'Ad-hoc meetings', 'Routine admin'] },
+  { id: 'q4', c: 'q4', t: 'Not Urgent, Not Important', s: 'Limit / Eliminate',
+    def: ['YouTube shorts (cap 30m)', 'Aimless social media scrolling'] },
+];
+
+/* ── Weekend defaults (single list) ── */
+const WK_DEF = [
+  'New DSA topics — 1.5 hrs',
+  'LLD/HLD new concepts — 1.5 hrs',
+  'AI deep practice — 1.5 hrs',
+  'Extended Bhagavatam reading — 30m',
+  'Exercise — 45m',
+  'Mock interview practice — 1 hr',
+  'Review & plan next week — 30m',
+  'Extended family / wife call',
+  'Rest & recharge',
+];
+
+/* =============================================================
+   ENGINE
+   Data lives in localStorage. Persists across sessions
+   automatically — even after closing the app.
+   Use Backup/Restore to move data to Google Drive or
+   between devices.
+   ============================================================= */
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DL   = ['M','T','W','T','F','S','S'];
+const LS_KEY = 'weeklyPlannerData';
+let weekOff = 0;
+
+function loadAll() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch { return {}; }
+}
+
+function saveAll(data) {
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+}
+
+function mondayOf(off) {
+  const now = new Date();
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - ((now.getDay() + 6) % 7) + (off || 0) * 7);
+  return mon;
+}
+
+function wk() { return mondayOf(weekOff).toISOString().slice(0, 10); }
+
+function wkData() {
+  const all = loadAll();
+  if (!all[wk()]) all[wk()] = {};
+  return all[wk()];
+}
+
+function saveWeek(d) {
+  const all = loadAll();
+  all[wk()] = d;
+  saveAll(all);
+}
+
+function wkRange() {
+  const mon = mondayOf(weekOff);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const f = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return `${f(mon)} — ${f(sun)}, ${mon.getFullYear()}`;
+}
+
+function todayIdx() {
+  if (weekOff !== 0) return -1;
+  return (new Date().getDay() + 6) % 7;
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show';
+  setTimeout(() => t.className = 'toast', 2400);
+}
+
+/* ── Daily Tracker ── */
+function renderDaily() {
+  const el = document.getElementById('dailyBody');
+  const d = wkData();
+  const chk = d.chk || {};
+  const ti = todayIdx();
+  let h = '';
+
+  HABITS.forEach(hab => {
+    const done = DAYS.reduce((s, _, i) => s + (chk[`${hab.n}_${i}`] === 1 ? 1 : 0), 0);
+    h += `<div class="habit-row">
+      <div class="h-info">
+        <div class="h-name">${hab.n}</div>
+        ${hab.d ? `<div class="h-dur">${hab.d}</div>` : ''}
+      </div><div class="h-days">`;
+    DAYS.forEach((_, i) => {
+      const v = chk[`${hab.n}_${i}`] || 0;
+      let cls = v === 1 ? 'done' : v === 2 ? 'miss' : '';
+      if (i === ti) cls += ' today';
+      const ico = v === 1 ? '✓' : v === 2 ? '✕' : '';
+      h += `<div class="dcb ${cls}" onclick="cyc('${hab.n.replace(/'/g,"\\'")}',${i})">
+        <span class="dl">${DL[i]}</span><span class="di">${ico}</span></div>`;
+    });
+    h += `</div><div class="h-score">${done}/7</div></div>`;
+  });
+
+  const total = HNAMES.reduce((s, n) => s + DAYS.reduce((s2, _, i) => s2 + ((chk[`${n}_${i}`] === 1) ? 1 : 0), 0), 0);
+  const pct = Math.round(total / (HNAMES.length * 7) * 100);
+  h += `<div class="total-bar">Week: <strong>${pct}%</strong> (${total}/${HNAMES.length * 7})</div>`;
+  el.innerHTML = h;
+  updateStats(chk);
+}
+
+function cyc(name, di) {
+  const d = wkData();
+  if (!d.chk) d.chk = {};
+  const k = `${name}_${di}`;
+  d.chk[k] = ((d.chk[k] || 0) + 1) % 3;
+  saveWeek(d);
+  renderDaily();
+}
+
+function updateStats(chk) {
+  const total = HNAMES.reduce((s, n) => s + DAYS.reduce((s2, _, i) => s2 + ((chk[`${n}_${i}`] === 1) ? 1 : 0), 0), 0);
+  const possible = HNAMES.length * 7;
+  document.getElementById('sDone').textContent = total;
+  document.getElementById('sScor').textContent = Math.round(total / possible * 100) + '%';
+
+  let streak = 0;
+  const ti = todayIdx();
+  if (ti >= 0) {
+    for (let dd = ti; dd >= 0; dd--) {
+      if (HNAMES.every(n => chk[`${n}_${dd}`] === 1)) streak++; else break;
+    }
+  }
+  document.getElementById('sStrk').textContent = streak;
+}
+
+/* ── Eisenhower Matrix ── */
+function renderMatrix() {
+  const el = document.getElementById('matrixBody');
+  const d = wkData();
+  let h = '';
+  QS.forEach(q => {
+    const items = d[`m_${q.id}`] || q.def;
+    h += `<div class="mq ${q.c}"><h3>${q.t}</h3><div class="qs">${q.s}</div>`;
+    items.forEach((it, i) => {
+      h += `<div class="mi"><span class="dot"></span><span>${it}</span>
+        <button class="x" onclick="rmM('${q.id}',${i})">&times;</button></div>`;
+    });
+    h += `<div class="ar"><input id="mi_${q.id}" placeholder="Add…"
+      onkeydown="if(event.key==='Enter')addM('${q.id}')">
+      <button onclick="addM('${q.id}')">+</button></div></div>`;
+  });
+  el.innerHTML = h;
+}
+
+function addM(qid) {
+  const inp = document.getElementById('mi_' + qid);
+  const v = inp.value.trim(); if (!v) return;
+  const d = wkData();
+  const q = QS.find(x => x.id === qid);
+  if (!d[`m_${qid}`]) d[`m_${qid}`] = [...q.def];
+  d[`m_${qid}`].push(v);
+  saveWeek(d); inp.value = '';
+  renderMatrix();
+}
+
+function rmM(qid, idx) {
+  const d = wkData();
+  const q = QS.find(x => x.id === qid);
+  if (!d[`m_${qid}`]) d[`m_${qid}`] = [...q.def];
+  d[`m_${qid}`].splice(idx, 1);
+  saveWeek(d);
+  renderMatrix();
+}
+
+/* ── Weekend (single list) ── */
+function renderWeekend() {
+  const el = document.getElementById('wkBody');
+  const d = wkData();
+  const todos = d.wk || WK_DEF.map(t => ({ t, d: false }));
+  let h = '';
+  todos.forEach((item, i) => {
+    h += `<div class="wt">
+      <div class="wcb ${item.d ? 'done' : ''}" onclick="togWk(${i})">${item.d ? '✓' : ''}</div>
+      <span class="txt ${item.d ? 'done' : ''}">${item.t}</span>
+      <button class="x" onclick="rmWk(${i})">&times;</button></div>`;
+  });
+  h += `<div class="ar"><input id="wiAdd" placeholder="Add task…"
+    onkeydown="if(event.key==='Enter')addWk()">
+    <button onclick="addWk()">+</button></div>`;
+  el.innerHTML = h;
+}
+
+function togWk(i) {
+  const d = wkData();
+  if (!d.wk) d.wk = WK_DEF.map(t => ({ t, d: false }));
+  d.wk[i].d = !d.wk[i].d;
+  saveWeek(d); renderWeekend();
+}
+
+function addWk() {
+  const inp = document.getElementById('wiAdd');
+  const v = inp.value.trim(); if (!v) return;
+  const d = wkData();
+  if (!d.wk) d.wk = WK_DEF.map(t => ({ t, d: false }));
+  d.wk.push({ t: v, d: false });
+  saveWeek(d); inp.value = '';
+  renderWeekend();
+}
+
+function rmWk(i) {
+  const d = wkData();
+  if (!d.wk) d.wk = WK_DEF.map(t => ({ t, d: false }));
+  d.wk.splice(i, 1);
+  saveWeek(d); renderWeekend();
+}
+
+/* ── Notes ── */
+function renderNotes() {
+  const area = document.getElementById('notesArea');
+  area.value = wkData().notes || '';
+  area.oninput = () => {
+    const d = wkData();
+    d.notes = area.value;
+    saveWeek(d);
+  };
+}
+
+/* =============================================================
+   BACKUP / RESTORE
+   Backup  → downloads a .json file (put it on Google Drive)
+   Restore → pick that .json file to load all your data back
+   ============================================================= */
+function backup() {
+  const all = loadAll();
+  const blob = new Blob([JSON.stringify(all, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `planner-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Backup saved! Upload it to Google Drive.');
+}
+
+document.getElementById('fileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      saveAll(data);
+      toast('Data restored successfully!');
+      renderAll();
+    } catch {
+      toast('Invalid file. Pick a valid planner backup.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+/* ── CSV ── */
+function exportCSV() {
+  const chk = wkData().chk || {};
+  let csv = 'Activity,Duration,' + DAYS.join(',') + ',Score\n';
+  HABITS.forEach(h => {
+    csv += [
+      `"${h.n}"`, h.d || '-',
+      ...DAYS.map((_, i) => { const v = chk[`${h.n}_${i}`] || 0; return v === 1 ? 'Done' : v === 2 ? 'Missed' : '-'; }),
+      DAYS.reduce((s, _, i) => s + (chk[`${h.n}_${i}`] === 1 ? 1 : 0), 0) + '/7'
+    ].join(',') + '\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `planner-${wk()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV exported!');
+}
+
+/* =============================================================
+   PWA INSTALL
+   ============================================================= */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'inline-block';
+});
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      document.getElementById('installBtn').style.display = 'none';
+    });
+  }
+}
+
+/* Register service worker for offline support */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+
+/* ── Nav & init ── */
+function go(d) { weekOff += d; renderAll(); }
+
+function renderAll() {
+  document.getElementById('wkLbl').textContent = wkRange();
+  renderDaily();
+  renderMatrix();
+  renderWeekend();
+  renderNotes();
+}
+
+renderAll();
+</script>
+</body>
+</html>

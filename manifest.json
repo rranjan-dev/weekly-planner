@@ -1,0 +1,17 @@
+{
+  "name": "Weekly Planner & Tracker",
+  "short_name": "Planner",
+  "description": "Daily habit tracker, Eisenhower Matrix, and weekend planner",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1117",
+  "theme_color": "#0f1117",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23818cf8'/><text x='256' y='380' text-anchor='middle' font-size='320'>📋</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
