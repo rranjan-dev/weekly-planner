@@ -13,67 +13,62 @@
 <title>Weekly Planner</title>
 <style>
 :root {
-  --bg: #0f1117;
-  --card: #1a1d27;
-  --border: #2a2d3a;
-  --text: #e4e4e7;
-  --muted: #71717a;
-  --accent: #818cf8;
-  --green: #34d399;
-  --red: #f87171;
-  --yellow: #fbbf24;
-  --blue: #60a5fa;
-  --pink: #f472b6;
+  --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a; --text: #e4e4e7;
+  --muted: #71717a; --accent: #818cf8; --green: #34d399; --red: #f87171;
+  --yellow: #fbbf24; --blue: #60a5fa; --pink: #f472b6; --orange: #fb923c;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  padding: 24px 32px;
-  min-height: 100vh;
-  padding-bottom: 80px;
+  background: var(--bg); color: var(--text);
+  padding: 24px 32px; min-height: 100vh; padding-bottom: 80px;
 }
 
-.header { text-align: center; margin-bottom: 20px; }
-
+/* ── Header ── */
+.header { text-align: center; margin-bottom: 16px; }
 .header h1 {
   font-size: 26px; font-weight: 700;
   background: linear-gradient(135deg, var(--accent), var(--pink));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   margin-bottom: 10px;
 }
-
-.week-nav {
-  display: flex; align-items: center; justify-content: center; gap: 16px;
-}
-
+.week-nav { display: flex; align-items: center; justify-content: center; gap: 16px; }
 .week-nav button {
   background: var(--card); border: 1px solid var(--border); color: var(--text);
-  width: 40px; height: 40px; border-radius: 10px;
-  cursor: pointer; font-size: 18px; transition: background 0.15s;
+  width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 18px;
 }
-
 .week-nav button:hover { background: var(--border); }
-
 .week-label { font-size: 15px; color: var(--muted); min-width: 240px; text-align: center; }
 
-.stats {
-  display: flex; justify-content: center; gap: 32px;
-  margin: 18px 0 28px; flex-wrap: wrap;
+/* ── Tabs ── */
+.tabs {
+  display: flex; gap: 4px; margin: 16px 0 20px;
+  background: var(--card); border-radius: 12px; padding: 4px;
+  border: 1px solid var(--border); overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 1; padding: 10px 6px; border: none; background: transparent;
+  color: var(--muted); border-radius: 9px; cursor: pointer;
+  font-size: 13px; font-weight: 500; transition: all 0.15s;
+  white-space: nowrap; min-width: fit-content;
+}
+.tab-btn.active { background: var(--accent); color: #000; font-weight: 600; }
+.tab-page { display: none; }
+.tab-page.active { display: block; }
 
+/* ── Stats ── */
+.stats { display: flex; justify-content: center; gap: 32px; margin: 0 0 24px; flex-wrap: wrap; }
 .stat { text-align: center; }
 .stat-val { font-size: 26px; font-weight: 700; color: var(--accent); }
 .stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
 
+/* ── Section cards ── */
 .section {
   background: var(--card); border: 1px solid var(--border);
   border-radius: 16px; padding: 22px 26px; margin-bottom: 24px;
 }
-
 .section-title {
   font-size: 16px; font-weight: 600; margin-bottom: 16px;
   color: var(--accent); text-transform: uppercase; letter-spacing: 0.8px;
@@ -85,12 +80,10 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .habit-row:last-child { border-bottom: none; }
-
 .h-info { flex: 1; min-width: 0; }
 .h-name { font-size: 15px; font-weight: 500; }
 .h-dur { font-size: 12px; color: var(--muted); }
 .h-days { display: flex; gap: 6px; }
-
 .dcb {
   width: 36px; height: 36px; border-radius: 8px;
   border: 2px solid var(--border); display: flex;
@@ -98,7 +91,6 @@ body {
   cursor: pointer; user-select: none; -webkit-user-select: none;
   transition: all 0.12s; gap: 1px;
 }
-
 .dcb .dl { font-size: 9px; color: var(--muted); font-weight: 600; }
 .dcb .di { font-size: 14px; }
 .dcb.done { background: var(--green); border-color: var(--green); color: #000; }
@@ -106,50 +98,38 @@ body {
 .dcb.miss { background: var(--red); border-color: var(--red); color: #fff; }
 .dcb.miss .dl { color: rgba(255,255,255,0.5); }
 .dcb.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-
 .h-score { width: 40px; text-align: center; font-weight: 700; font-size: 14px; color: var(--muted); margin-left: 8px; }
-
 .total-bar {
-  text-align: center; padding: 14px 0 0;
-  border-top: 1px solid var(--border);
+  text-align: center; padding: 14px 0 0; border-top: 1px solid var(--border);
   margin-top: 8px; font-size: 14px; color: var(--muted);
 }
 .total-bar strong { color: var(--accent); font-size: 20px; margin: 0 6px; }
 
 /* ── Eisenhower Matrix ── */
 .matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
 .mq {
   border: 1px solid var(--border); border-radius: 14px;
   padding: 16px; min-height: 140px; background: rgba(255,255,255,0.01);
 }
-
 .mq h3 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
 .mq .qs { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-
 .q1 { border-top: 3px solid var(--red); }    .q1 h3 { color: var(--red); }
 .q2 { border-top: 3px solid var(--blue); }   .q2 h3 { color: var(--blue); }
 .q3 { border-top: 3px solid var(--yellow); } .q3 h3 { color: var(--yellow); }
 .q4 { border-top: 3px solid var(--muted); }  .q4 h3 { color: var(--muted); }
-
 .mi {
   display: flex; align-items: center; gap: 8px;
   padding: 6px 8px; margin-bottom: 4px;
   background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 13px;
 }
-
 .mi .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.q1 .dot { background: var(--red); }
-.q2 .dot { background: var(--blue); }
-.q3 .dot { background: var(--yellow); }
-.q4 .dot { background: var(--muted); }
-
+.q1 .dot { background: var(--red); } .q2 .dot { background: var(--blue); }
+.q3 .dot { background: var(--yellow); } .q4 .dot { background: var(--muted); }
 .mi .x {
   margin-left: auto; background: none; border: none;
   color: var(--muted); cursor: pointer; font-size: 18px; padding: 0 4px; line-height: 1;
 }
 .mi .x:hover { color: var(--red); }
-
 .ar { display: flex; gap: 6px; margin-top: 10px; }
 .ar input {
   flex: 1; min-width: 0; background: rgba(255,255,255,0.05);
@@ -159,23 +139,19 @@ body {
 .ar input:focus { border-color: var(--accent); }
 .ar button {
   background: var(--accent); border: none; color: #000;
-  width: 34px; border-radius: 8px; cursor: pointer;
-  font-size: 18px; font-weight: 700; flex-shrink: 0;
+  width: 34px; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: 700; flex-shrink: 0;
 }
 
-/* ── Weekend ── */
+/* ── Weekend to-do ── */
 .wt {
   display: flex; align-items: center; gap: 10px;
   padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px;
 }
 .wt:last-of-type { border-bottom: none; }
-
 .wcb {
   width: 24px; height: 24px; border-radius: 7px;
-  border: 2px solid var(--border); display: flex;
-  align-items: center; justify-content: center;
-  cursor: pointer; flex-shrink: 0; font-size: 13px;
-  transition: all 0.12s; user-select: none;
+  border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; font-size: 13px; transition: all 0.12s; user-select: none;
 }
 .wcb.done { background: var(--green); border-color: var(--green); color: #000; }
 .wt .txt.done { text-decoration: line-through; color: var(--muted); }
@@ -187,12 +163,54 @@ body {
 
 /* ── Notes ── */
 textarea.notes {
-  width: 100%; min-height: 140px;
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-  border-radius: 12px; padding: 14px; color: var(--text);
-  font-size: 14px; font-family: inherit; resize: vertical; outline: none;
+  width: 100%; min-height: 140px; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 12px; padding: 14px;
+  color: var(--text); font-size: 14px; font-family: inherit; resize: vertical; outline: none;
 }
 textarea.notes:focus { border-color: var(--accent); }
+
+/* ══════════════════════════════════════
+   SCHEDULE & PRINCIPLES TABS
+   ══════════════════════════════════════ */
+.sched-block {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.sched-block:last-child { border-bottom: none; }
+.sched-time {
+  min-width: 80px; font-size: 13px; font-weight: 600;
+  color: var(--accent); padding-top: 2px; white-space: nowrap;
+}
+.sched-desc { font-size: 14px; line-height: 1.5; }
+.sched-desc .dur { color: var(--muted); font-size: 12px; }
+.sched-desc .note { color: var(--muted); font-size: 12px; font-style: italic; display: block; margin-top: 2px; }
+
+.sched-divider {
+  text-align: center; padding: 14px 0; font-size: 12px;
+  color: var(--pink); font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px; border-bottom: 1px solid var(--border);
+}
+
+.principle {
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.principle:last-child { border-bottom: none; }
+.principle .p-title {
+  font-size: 15px; font-weight: 600; margin-bottom: 4px;
+}
+.principle .p-body {
+  font-size: 13px; color: var(--muted); line-height: 1.6;
+}
+
+.p-highlight { color: var(--green); font-weight: 600; }
+.p-warn { color: var(--red); font-weight: 600; }
+.p-info { color: var(--blue); font-weight: 600; }
+
+.date-section {
+  text-align: center; padding: 12px; margin-bottom: 16px;
+  background: rgba(129,140,248,0.08); border-radius: 10px;
+  font-size: 14px; color: var(--accent);
+}
 
 /* ── Bottom bar ── */
 .bottom-bar {
@@ -202,94 +220,58 @@ textarea.notes:focus { border-color: var(--accent); }
   gap: 10px; padding: 12px 16px; z-index: 100;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
 }
-
 .bottom-bar button {
   padding: 11px 24px; border: none; border-radius: 10px;
   font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s;
 }
 .bottom-bar button:active { transform: scale(0.97); }
-
 .btn-backup { background: var(--green); color: #000; }
 .btn-backup:hover { opacity: 0.9; }
 .btn-restore { background: var(--border); color: var(--text); }
 .btn-restore:hover { background: var(--muted); }
 .btn-csv { background: var(--card); color: var(--text); border: 1px solid var(--border) !important; }
 .btn-csv:hover { background: var(--border); }
-
 #installBtn { display: none; background: var(--accent); color: #000; }
 
 /* ── Toast ── */
 .toast {
-  position: fixed; top: 20px; left: 50%;
-  transform: translateX(-50%) translateY(-80px);
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px);
   background: var(--green); color: #000; padding: 12px 28px;
   border-radius: 12px; font-weight: 600; font-size: 14px; z-index: 200;
   transition: transform 0.3s; pointer-events: none;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
-/* ── Responsive — mobile ── */
+/* ── Responsive ── */
 @media (max-width: 700px) {
   body { padding: 12px; padding-bottom: 76px; }
-
   .header h1 { font-size: 22px; }
-
-  .stats { gap: 16px; margin: 14px 0 20px; }
+  .stats { gap: 16px; margin: 0 0 16px; }
   .stat-val { font-size: 22px; }
-
   .section { padding: 14px; margin-bottom: 16px; border-radius: 12px; }
   .section-title { font-size: 14px; margin-bottom: 12px; }
-
-  /* Stack habit rows vertically on mobile */
-  .habit-row {
-    flex-wrap: wrap;
-    padding: 10px 0;
-    gap: 6px;
-  }
-
-  .h-info {
-    width: 100%;
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-  }
-
-  .h-name { font-size: 14px; }
-  .h-dur { font-size: 11px; }
-
-  .h-days {
-    gap: 6px;
-    flex: 1;
-  }
-
-  .dcb {
-    width: 38px; height: 38px;
-    border-radius: 8px;
-    flex: 1;
-  }
-
-  .dcb .dl { font-size: 9px; }
-  .dcb .di { font-size: 13px; }
-
-  .h-score {
-    width: auto;
-    font-size: 13px;
-    margin-left: 4px;
-  }
-
-  /* Matrix single column */
+  .habit-row { flex-wrap: wrap; padding: 10px 0; gap: 6px; }
+  .h-info { width: 100%; display: flex; align-items: baseline; gap: 8px; }
+  .h-name { font-size: 14px; } .h-dur { font-size: 11px; }
+  .h-days { gap: 6px; flex: 1; }
+  .dcb { width: 38px; height: 38px; border-radius: 8px; flex: 1; }
+  .dcb .dl { font-size: 9px; } .dcb .di { font-size: 13px; }
+  .h-score { width: auto; font-size: 13px; margin-left: 4px; }
   .matrix { grid-template-columns: 1fr; gap: 10px; }
   .mq { padding: 14px; min-height: auto; }
-
-  /* Bottom bar */
   .bottom-bar { gap: 6px; padding: 10px 12px; }
   .bottom-bar button { padding: 10px 14px; font-size: 13px; }
+  .tabs { gap: 2px; padding: 3px; }
+  .tab-btn { padding: 9px 4px; font-size: 12px; }
+  .sched-time { min-width: 65px; font-size: 12px; }
+  .sched-desc { font-size: 13px; }
 }
 
 @media print {
   body { background: #fff; color: #222; }
   .section { background: #fafafa; border-color: #ddd; }
-  .bottom-bar, .ar, .x { display: none !important; }
+  .bottom-bar, .ar, .x, .tabs { display: none !important; }
+  .tab-page { display: block !important; page-break-before: always; }
 }
 
 #fileInput { display: none; }
@@ -309,32 +291,294 @@ textarea.notes:focus { border-color: var(--accent); }
   </div>
 </div>
 
-<div class="stats">
-  <div class="stat"><div class="stat-val" id="sDone">0</div><div class="stat-lbl">Completed</div></div>
-  <div class="stat"><div class="stat-val" id="sScor">0%</div><div class="stat-lbl">This Week</div></div>
-  <div class="stat"><div class="stat-val" id="sStrk">0</div><div class="stat-lbl">Day Streak</div></div>
+<!-- ══════ TABS ══════ -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="planner">Planner</button>
+  <button class="tab-btn" data-tab="weekday">Weekday</button>
+  <button class="tab-btn" data-tab="weekend-sched">Weekend</button>
+  <button class="tab-btn" data-tab="principles">Principles</button>
 </div>
 
-<div class="section">
-  <div class="section-title">&#9745; Daily Must-Do Tracker</div>
-  <div id="dailyBody"></div>
+<!-- ══════ TAB 1: PLANNER (default) ══════ -->
+<div class="tab-page active" id="tab-planner">
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="sDone">0</div><div class="stat-lbl">Completed</div></div>
+    <div class="stat"><div class="stat-val" id="sScor">0%</div><div class="stat-lbl">This Week</div></div>
+    <div class="stat"><div class="stat-val" id="sStrk">0</div><div class="stat-lbl">Day Streak</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#9745; Daily Must-Do Tracker</div>
+    <div id="dailyBody"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#9638; Eisenhower Matrix</div>
+    <div class="matrix" id="matrixBody"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#9733; Weekend To-Do</div>
+    <div id="wkBody"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#9998; Weekly Notes & Reflections</div>
+    <textarea class="notes" id="notesArea" placeholder="What went well this week? What derailed me? Key takeaways. Plan for next week..."></textarea>
+  </div>
+
 </div>
 
-<div class="section">
-  <div class="section-title">&#9638; Eisenhower Matrix</div>
-  <div class="matrix" id="matrixBody"></div>
+<!-- ══════ TAB 2: WEEKDAY SCHEDULE ══════ -->
+<div class="tab-page" id="tab-weekday">
+  <div class="section">
+    <div class="section-title">Weekday Schedule (Mon–Fri)</div>
+    <div class="date-section" id="todayDate"></div>
+
+    <div class="sched-divider">Morning Block — Sacred Time</div>
+
+    <div class="sched-block">
+      <div class="sched-time">04:15 AM</div>
+      <div class="sched-desc">Wake up, freshen up <span class="dur">(15m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">04:30</div>
+      <div class="sched-desc">Chanting <span class="dur">(1hr 15m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">05:45</div>
+      <div class="sched-desc">Reading Bhagavatam <span class="dur">(20m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">06:05</div>
+      <div class="sched-desc">Spiritual Lecture <span class="dur">(30m)</span>
+        <span class="note">Can listen while getting ready / light stretching</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">06:35</div>
+      <div class="sched-desc">Physical Exercise <span class="dur">(40m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">07:15</div>
+      <div class="sched-desc">Shower + Get Ready <span class="dur">(30m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">07:45</div>
+      <div class="sched-desc">Breakfast <span class="dur">(20m)</span></div>
+    </div>
+
+    <div class="sched-divider">Learning & Work</div>
+
+    <div class="sched-block">
+      <div class="sched-time">08:00</div>
+      <div class="sched-desc">AI Morning Class <span class="dur">(1hr)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">09:00</div>
+      <div class="sched-desc">AI Practice <span class="dur">(30m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">09:30</div>
+      <div class="sched-desc">Office Work Begins <span class="dur">(8 hrs)</span>
+        <span class="note">Lunch break within office hours</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">05:30 PM</div>
+      <div class="sched-desc">Office Ends</div>
+    </div>
+
+    <div class="sched-divider">Evening — Growth & Relationships</div>
+
+    <div class="sched-block">
+      <div class="sched-time">05:30</div>
+      <div class="sched-desc">Transition / Light snack <span class="dur">(15m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">05:45</div>
+      <div class="sched-desc">DSA Revision <span class="dur">(30m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">06:15</div>
+      <div class="sched-desc">LLD/HLD Revision <span class="dur">(30m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">06:45</div>
+      <div class="sched-desc">Dinner <span class="dur">(30m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">07:15</div>
+      <div class="sched-desc">Family Call <span class="dur">(1hr)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">08:15</div>
+      <div class="sched-desc">Wife Call <span class="dur">(45m)</span></div>
+    </div>
+
+    <div class="sched-divider">Wind Down</div>
+
+    <div class="sched-block">
+      <div class="sched-time">09:00</div>
+      <div class="sched-desc">Free Time / Relaxation <span class="dur">(30–45m)</span>
+        <span class="note">YouTube, comedy, motivational content</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">09:30</div>
+      <div class="sched-desc">Wind down, sleep prep</div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">10:00 PM</div>
+      <div class="sched-desc">Sleep <span class="dur">(6.5 hrs → wake 4:15 AM)</span></div>
+    </div>
+  </div>
 </div>
 
-<div class="section">
-  <div class="section-title">&#9733; Weekend To-Do</div>
-  <div id="wkBody"></div>
+<!-- ══════ TAB 3: WEEKEND SCHEDULE ══════ -->
+<div class="tab-page" id="tab-weekend-sched">
+  <div class="section">
+    <div class="section-title">Weekend Schedule (Sat & Sun)</div>
+    <div class="date-section">Weekdays are for maintenance, weekends are for growth.</div>
+
+    <div class="sched-divider">Morning Block</div>
+
+    <div class="sched-block">
+      <div class="sched-time">05:00 AM</div>
+      <div class="sched-desc">Wake up <span class="dur">(slightly later)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">05:15</div>
+      <div class="sched-desc">Chanting <span class="dur">(1hr 15m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">06:30</div>
+      <div class="sched-desc">Bhagavatam Reading <span class="dur">(30m — extended)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">07:00</div>
+      <div class="sched-desc">Spiritual Lecture <span class="dur">(30m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">07:30</div>
+      <div class="sched-desc">Physical Exercise <span class="dur">(45m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">08:15</div>
+      <div class="sched-desc">Shower + Breakfast <span class="dur">(45m)</span></div>
+    </div>
+
+    <div class="sched-divider">Deep Work — Interview Prep & Growth</div>
+
+    <div class="sched-block">
+      <div class="sched-time">09:00</div>
+      <div class="sched-desc">NEW DSA Topics / Problem Solving <span class="dur">(1.5 hrs)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">10:30</div>
+      <div class="sched-desc">Break <span class="dur">(15m)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">10:45</div>
+      <div class="sched-desc">NEW LLD/HLD Concepts + System Design <span class="dur">(1.5 hrs)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">12:15 PM</div>
+      <div class="sched-desc">Lunch + Rest <span class="dur">(1hr)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">01:15</div>
+      <div class="sched-desc">AI Practice / Side Projects <span class="dur">(1.5 hrs)</span></div>
+    </div>
+
+    <div class="sched-divider">Afternoon — Recharge & Relationships</div>
+
+    <div class="sched-block">
+      <div class="sched-time">02:45</div>
+      <div class="sched-desc">Free Time / Entertainment <span class="dur">(1.5–2 hrs)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">04:30</div>
+      <div class="sched-desc">Family Call <span class="dur">(1 hr)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">05:30</div>
+      <div class="sched-desc">Wife Call <span class="dur">(1 hr — extended on weekends)</span></div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">06:30</div>
+      <div class="sched-desc">Dinner + Relaxation <span class="dur">(1.5 hrs)</span></div>
+    </div>
+
+    <div class="sched-divider">Wind Down</div>
+
+    <div class="sched-block">
+      <div class="sched-time">08:00</div>
+      <div class="sched-desc">Light reading / journaling / planning next week</div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">09:00</div>
+      <div class="sched-desc">Wind down</div>
+    </div>
+    <div class="sched-block">
+      <div class="sched-time">09:30 PM</div>
+      <div class="sched-desc">Sleep</div>
+    </div>
+  </div>
 </div>
 
-<div class="section">
-  <div class="section-title">&#9998; Weekly Notes & Reflections</div>
-  <textarea class="notes" id="notesArea" placeholder="What went well this week? What derailed me? Key takeaways. Plan for next week..."></textarea>
+<!-- ══════ TAB 4: PRINCIPLES ══════ -->
+<div class="tab-page" id="tab-principles">
+  <div class="section">
+    <div class="section-title">Key Principles for a Productive Routine</div>
+
+    <div class="principle">
+      <div class="p-title">Weekdays = Maintenance, Weekends = Growth</div>
+      <div class="p-body">Weekday cognitive budget is spent on office work. Don't try to learn new DSA patterns at 6 PM after 8 hours of work — <span class="p-highlight">revise what you know</span>. Save deep learning for fresh weekend mornings.</div>
+    </div>
+
+    <div class="principle">
+      <div class="p-title">Protect the Morning Block (4:30–7:15)</div>
+      <div class="p-body">All spiritual + exercise done before the world demands your attention. This is your <span class="p-highlight">"sacred time"</span> — no phone, no distractions. If this goes well, the rest of the day follows. If you skip this, everything cascades.</div>
+    </div>
+
+    <div class="principle">
+      <div class="p-title">Sleep is Non-Negotiable</div>
+      <div class="p-body"><span class="p-warn">6.5 hours is your minimum.</span> If you sleep at 10:30 instead of 10:00, wake at 4:45 — don't sacrifice sleep. A tired mind will make your 16 waking hours inefficient.</div>
+    </div>
+
+    <div class="principle">
+      <div class="p-title">Cluster Calls Together</div>
+      <div class="p-body">Family + wife calls back-to-back avoids context switching. Don't scatter them across the evening — <span class="p-info">batch relationships time</span> like you batch work.</div>
+    </div>
+
+    <div class="principle">
+      <div class="p-title">Relaxation is Intentional, Not Leftover</div>
+      <div class="p-body">30 minutes of guilt-free entertainment is <span class="p-highlight">scheduled, not squeezed in</span>. When it's on the calendar, you enjoy it. When it's stolen time, you feel guilty and it doesn't recharge you.</div>
+    </div>
+
+    <div class="principle">
+      <div class="p-title">Limit YouTube Shorts to 30 Minutes</div>
+      <div class="p-body"><span class="p-warn">Shorts are designed to be addictive. Set a timer.</span> This is your Q4 (Not Urgent, Not Important) — the Eisenhower Matrix says eliminate or strictly limit. Don't let 30 minutes become 2 hours.</div>
+    </div>
+
+    <div class="principle">
+      <div class="p-title">The 2-Minute Rule for Transitions</div>
+      <div class="p-body">Between activities, take 2 minutes to close the previous context mentally. <span class="p-info">Don't carry office stress into family calls, or DSA frustration into relaxation time.</span> A clean mental break between blocks makes each block more effective.</div>
+    </div>
+
+    <div class="principle">
+      <div class="p-title">Weekly, Not Daily, Perfection</div>
+      <div class="p-body">You will miss a day. That's fine. <span class="p-highlight">Aim for 6/7 days</span> on your non-negotiables. The streak mentality helps, but don't let one bad day spiral into "I've already failed this week."</div>
+    </div>
+
+    <div class="principle">
+      <div class="p-title">Consistency Over Intensity</div>
+      <div class="p-body">The key differentiator between people who sustain this and those who burn out: <span class="p-highlight">it's better to do 80% of this schedule for 6 months than 100% for 2 weeks and then collapse.</span> Start with this plan, track for 2 weeks, then adjust based on what you learn about your energy patterns.</div>
+    </div>
+
+  </div>
 </div>
 
+<!-- ══════ BOTTOM BAR ══════ -->
 <div class="bottom-bar">
   <button class="btn-backup" onclick="backup()">&#8595; Backup</button>
   <button class="btn-restore" onclick="document.getElementById('fileInput').click()">&#8593; Restore</button>
@@ -343,9 +587,7 @@ textarea.notes:focus { border-color: var(--accent); }
 </div>
 
 <script>
-/* =============================================================
-   HABITS — flat list. Add / remove / reorder as you like.
-   ============================================================= */
+/* ── Habits ── */
 const HABITS = [
   { n: 'Chanting',            d: '1h 15m' },
   { n: 'Reading Bhagavatam',  d: '20m' },
@@ -356,336 +598,207 @@ const HABITS = [
   { n: 'LLD/HLD Revision',    d: '30m' },
   { n: 'Sleep by 10 PM',      d: '' },
 ];
-
 const HNAMES = HABITS.map(h => h.n);
 
 /* ── Eisenhower defaults ── */
 const QS = [
-  { id: 'q1', c: 'q1', t: 'Urgent & Important', s: 'Do First',
-    def: ['Office deliverables & deadlines', 'Chanting (daily non-negotiable)', 'Physical Exercise', 'Family / Wife calls'] },
-  { id: 'q2', c: 'q2', t: 'Important, Not Urgent', s: 'Schedule It',
-    def: ['DSA revision & new topics', 'LLD/HLD system design prep', 'AI class + practice', 'Bhagavatam reading', 'Spiritual lectures'] },
-  { id: 'q3', c: 'q3', t: 'Urgent, Not Important', s: 'Delegate / Batch',
-    def: ['Non-critical Slack/email', 'Ad-hoc meetings', 'Routine admin'] },
-  { id: 'q4', c: 'q4', t: 'Not Urgent, Not Important', s: 'Limit / Eliminate',
-    def: ['YouTube shorts (cap 30m)', 'Aimless social media scrolling'] },
+  { id:'q1', c:'q1', t:'Urgent & Important', s:'Do First',
+    def:['Office deliverables & deadlines','Chanting (daily non-negotiable)','Physical Exercise','Family / Wife calls'] },
+  { id:'q2', c:'q2', t:'Important, Not Urgent', s:'Schedule It',
+    def:['DSA revision & new topics','LLD/HLD system design prep','AI class + practice','Bhagavatam reading','Spiritual lectures'] },
+  { id:'q3', c:'q3', t:'Urgent, Not Important', s:'Delegate / Batch',
+    def:['Non-critical Slack/email','Ad-hoc meetings','Routine admin'] },
+  { id:'q4', c:'q4', t:'Not Urgent, Not Important', s:'Limit / Eliminate',
+    def:['YouTube shorts (cap 30m)','Aimless social media scrolling'] },
 ];
 
-/* ── Weekend defaults (single list) ── */
+/* ── Weekend defaults ── */
 const WK_DEF = [
-  'New DSA topics — 1.5 hrs',
-  'LLD/HLD new concepts — 1.5 hrs',
-  'AI deep practice — 1.5 hrs',
-  'Extended Bhagavatam reading — 30m',
-  'Exercise — 45m',
-  'Mock interview practice — 1 hr',
-  'Review & plan next week — 30m',
-  'Extended family / wife call',
-  'Rest & recharge',
+  'New DSA topics — 1.5 hrs','LLD/HLD new concepts — 1.5 hrs',
+  'AI deep practice — 1.5 hrs','Extended Bhagavatam reading — 30m',
+  'Exercise — 45m','Mock interview practice — 1 hr',
+  'Review & plan next week — 30m','Extended family / wife call','Rest & recharge',
 ];
 
-/* =============================================================
-   ENGINE
-   Data lives in localStorage. Persists across sessions
-   automatically — even after closing the app.
-   Use Backup/Restore to move data to Google Drive or
-   between devices.
-   ============================================================= */
+/* ── Engine ── */
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const DL   = ['M','T','W','T','F','S','S'];
 const LS_KEY = 'weeklyPlannerData';
 let weekOff = 0;
 
-function loadAll() {
-  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch { return {}; }
-}
-
-function saveAll(data) {
-  localStorage.setItem(LS_KEY, JSON.stringify(data));
-}
+function loadAll() { try { return JSON.parse(localStorage.getItem(LS_KEY))||{}; } catch{return {};} }
+function saveAll(d) { localStorage.setItem(LS_KEY, JSON.stringify(d)); }
 
 function mondayOf(off) {
-  const now = new Date();
-  const mon = new Date(now);
-  mon.setDate(now.getDate() - ((now.getDay() + 6) % 7) + (off || 0) * 7);
+  const now=new Date(), mon=new Date(now);
+  mon.setDate(now.getDate()-((now.getDay()+6)%7)+(off||0)*7);
   return mon;
 }
-
-function wk() { return mondayOf(weekOff).toISOString().slice(0, 10); }
-
-function wkData() {
-  const all = loadAll();
-  if (!all[wk()]) all[wk()] = {};
-  return all[wk()];
-}
-
-function saveWeek(d) {
-  const all = loadAll();
-  all[wk()] = d;
-  saveAll(all);
-}
+function wk() { return mondayOf(weekOff).toISOString().slice(0,10); }
+function wkData() { const a=loadAll(); if(!a[wk()])a[wk()]={}; return a[wk()]; }
+function saveWeek(d) { const a=loadAll(); a[wk()]=d; saveAll(a); }
 
 function wkRange() {
-  const mon = mondayOf(weekOff);
-  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-  const f = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const mon=mondayOf(weekOff), sun=new Date(mon); sun.setDate(mon.getDate()+6);
+  const f=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   return `${f(mon)} — ${f(sun)}, ${mon.getFullYear()}`;
 }
-
-function todayIdx() {
-  if (weekOff !== 0) return -1;
-  return (new Date().getDay() + 6) % 7;
-}
+function todayIdx() { if(weekOff!==0)return -1; return(new Date().getDay()+6)%7; }
 
 function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show';
-  setTimeout(() => t.className = 'toast', 2400);
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show';
+  setTimeout(()=>t.className='toast',2400);
 }
+
+/* ── Tabs ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
 
 /* ── Daily Tracker ── */
 function renderDaily() {
-  const el = document.getElementById('dailyBody');
-  const d = wkData();
-  const chk = d.chk || {};
-  const ti = todayIdx();
-  let h = '';
-
+  const el=document.getElementById('dailyBody'), d=wkData(), chk=d.chk||{}, ti=todayIdx();
+  let h='';
   HABITS.forEach(hab => {
-    const done = DAYS.reduce((s, _, i) => s + (chk[`${hab.n}_${i}`] === 1 ? 1 : 0), 0);
-    h += `<div class="habit-row">
-      <div class="h-info">
-        <div class="h-name">${hab.n}</div>
-        ${hab.d ? `<div class="h-dur">${hab.d}</div>` : ''}
-      </div><div class="h-days">`;
-    DAYS.forEach((_, i) => {
-      const v = chk[`${hab.n}_${i}`] || 0;
-      let cls = v === 1 ? 'done' : v === 2 ? 'miss' : '';
-      if (i === ti) cls += ' today';
-      const ico = v === 1 ? '✓' : v === 2 ? '✕' : '';
-      h += `<div class="dcb ${cls}" onclick="cyc('${hab.n.replace(/'/g,"\\'")}',${i})">
-        <span class="dl">${DL[i]}</span><span class="di">${ico}</span></div>`;
+    const done=DAYS.reduce((s,_,i)=>s+(chk[`${hab.n}_${i}`]===1?1:0),0);
+    h+=`<div class="habit-row"><div class="h-info"><div class="h-name">${hab.n}</div>${hab.d?`<div class="h-dur">${hab.d}</div>`:''}</div><div class="h-days">`;
+    DAYS.forEach((_,i)=>{
+      const v=chk[`${hab.n}_${i}`]||0;
+      let cls=v===1?'done':v===2?'miss':'';
+      if(i===ti)cls+=' today';
+      const ico=v===1?'✓':v===2?'✕':'';
+      h+=`<div class="dcb ${cls}" onclick="cyc('${hab.n.replace(/'/g,"\\'")}',${i})"><span class="dl">${DL[i]}</span><span class="di">${ico}</span></div>`;
     });
-    h += `</div><div class="h-score">${done}/7</div></div>`;
+    h+=`</div><div class="h-score">${done}/7</div></div>`;
   });
-
-  const total = HNAMES.reduce((s, n) => s + DAYS.reduce((s2, _, i) => s2 + ((chk[`${n}_${i}`] === 1) ? 1 : 0), 0), 0);
-  const pct = Math.round(total / (HNAMES.length * 7) * 100);
-  h += `<div class="total-bar">Week: <strong>${pct}%</strong> (${total}/${HNAMES.length * 7})</div>`;
-  el.innerHTML = h;
-  updateStats(chk);
+  const total=HNAMES.reduce((s,n)=>s+DAYS.reduce((s2,_,i)=>s2+((chk[`${n}_${i}`]===1)?1:0),0),0);
+  const pct=Math.round(total/(HNAMES.length*7)*100);
+  h+=`<div class="total-bar">Week: <strong>${pct}%</strong> (${total}/${HNAMES.length*7})</div>`;
+  el.innerHTML=h; updateStats(chk);
 }
 
-function cyc(name, di) {
-  const d = wkData();
-  if (!d.chk) d.chk = {};
-  const k = `${name}_${di}`;
-  d.chk[k] = ((d.chk[k] || 0) + 1) % 3;
-  saveWeek(d);
-  renderDaily();
+function cyc(name,di) {
+  const d=wkData(); if(!d.chk)d.chk={};
+  d.chk[`${name}_${di}`]=((d.chk[`${name}_${di}`]||0)+1)%3;
+  saveWeek(d); renderDaily();
 }
 
 function updateStats(chk) {
-  const total = HNAMES.reduce((s, n) => s + DAYS.reduce((s2, _, i) => s2 + ((chk[`${n}_${i}`] === 1) ? 1 : 0), 0), 0);
-  const possible = HNAMES.length * 7;
-  document.getElementById('sDone').textContent = total;
-  document.getElementById('sScor').textContent = Math.round(total / possible * 100) + '%';
-
-  let streak = 0;
-  const ti = todayIdx();
-  if (ti >= 0) {
-    for (let dd = ti; dd >= 0; dd--) {
-      if (HNAMES.every(n => chk[`${n}_${dd}`] === 1)) streak++; else break;
-    }
-  }
-  document.getElementById('sStrk').textContent = streak;
+  const total=HNAMES.reduce((s,n)=>s+DAYS.reduce((s2,_,i)=>s2+((chk[`${n}_${i}`]===1)?1:0),0),0);
+  const possible=HNAMES.length*7;
+  document.getElementById('sDone').textContent=total;
+  document.getElementById('sScor').textContent=Math.round(total/possible*100)+'%';
+  let streak=0; const ti=todayIdx();
+  if(ti>=0){for(let dd=ti;dd>=0;dd--){if(HNAMES.every(n=>chk[`${n}_${dd}`]===1))streak++;else break;}}
+  document.getElementById('sStrk').textContent=streak;
 }
 
-/* ── Eisenhower Matrix ── */
+/* ── Eisenhower ── */
 function renderMatrix() {
-  const el = document.getElementById('matrixBody');
-  const d = wkData();
-  let h = '';
-  QS.forEach(q => {
-    const items = d[`m_${q.id}`] || q.def;
-    h += `<div class="mq ${q.c}"><h3>${q.t}</h3><div class="qs">${q.s}</div>`;
-    items.forEach((it, i) => {
-      h += `<div class="mi"><span class="dot"></span><span>${it}</span>
-        <button class="x" onclick="rmM('${q.id}',${i})">&times;</button></div>`;
-    });
-    h += `<div class="ar"><input id="mi_${q.id}" placeholder="Add…"
-      onkeydown="if(event.key==='Enter')addM('${q.id}')">
-      <button onclick="addM('${q.id}')">+</button></div></div>`;
+  const el=document.getElementById('matrixBody'), d=wkData(); let h='';
+  QS.forEach(q=>{
+    const items=d[`m_${q.id}`]||q.def;
+    h+=`<div class="mq ${q.c}"><h3>${q.t}</h3><div class="qs">${q.s}</div>`;
+    items.forEach((it,i)=>{h+=`<div class="mi"><span class="dot"></span><span>${it}</span><button class="x" onclick="rmM('${q.id}',${i})">&times;</button></div>`;});
+    h+=`<div class="ar"><input id="mi_${q.id}" placeholder="Add…" onkeydown="if(event.key==='Enter')addM('${q.id}')"><button onclick="addM('${q.id}')">+</button></div></div>`;
   });
-  el.innerHTML = h;
+  el.innerHTML=h;
 }
 
 function addM(qid) {
-  const inp = document.getElementById('mi_' + qid);
-  const v = inp.value.trim(); if (!v) return;
-  const d = wkData();
-  const q = QS.find(x => x.id === qid);
-  if (!d[`m_${qid}`]) d[`m_${qid}`] = [...q.def];
-  d[`m_${qid}`].push(v);
-  saveWeek(d); inp.value = '';
-  renderMatrix();
+  const inp=document.getElementById('mi_'+qid), v=inp.value.trim(); if(!v)return;
+  const d=wkData(), q=QS.find(x=>x.id===qid);
+  if(!d[`m_${qid}`])d[`m_${qid}`]=[...q.def]; d[`m_${qid}`].push(v);
+  saveWeek(d); inp.value=''; renderMatrix();
 }
 
-function rmM(qid, idx) {
-  const d = wkData();
-  const q = QS.find(x => x.id === qid);
-  if (!d[`m_${qid}`]) d[`m_${qid}`] = [...q.def];
-  d[`m_${qid}`].splice(idx, 1);
-  saveWeek(d);
-  renderMatrix();
+function rmM(qid,idx) {
+  const d=wkData(), q=QS.find(x=>x.id===qid);
+  if(!d[`m_${qid}`])d[`m_${qid}`]=[...q.def]; d[`m_${qid}`].splice(idx,1);
+  saveWeek(d); renderMatrix();
 }
 
-/* ── Weekend (single list) ── */
+/* ── Weekend to-do ── */
 function renderWeekend() {
-  const el = document.getElementById('wkBody');
-  const d = wkData();
-  const todos = d.wk || WK_DEF.map(t => ({ t, d: false }));
-  let h = '';
-  todos.forEach((item, i) => {
-    h += `<div class="wt">
-      <div class="wcb ${item.d ? 'done' : ''}" onclick="togWk(${i})">${item.d ? '✓' : ''}</div>
-      <span class="txt ${item.d ? 'done' : ''}">${item.t}</span>
-      <button class="x" onclick="rmWk(${i})">&times;</button></div>`;
+  const el=document.getElementById('wkBody'), d=wkData();
+  const todos=d.wk||WK_DEF.map(t=>({t,d:false}));
+  let h='';
+  todos.forEach((item,i)=>{
+    h+=`<div class="wt"><div class="wcb ${item.d?'done':''}" onclick="togWk(${i})">${item.d?'✓':''}</div><span class="txt ${item.d?'done':''}">${item.t}</span><button class="x" onclick="rmWk(${i})">&times;</button></div>`;
   });
-  h += `<div class="ar"><input id="wiAdd" placeholder="Add task…"
-    onkeydown="if(event.key==='Enter')addWk()">
-    <button onclick="addWk()">+</button></div>`;
-  el.innerHTML = h;
+  h+=`<div class="ar"><input id="wiAdd" placeholder="Add task…" onkeydown="if(event.key==='Enter')addWk()"><button onclick="addWk()">+</button></div>`;
+  el.innerHTML=h;
 }
 
-function togWk(i) {
-  const d = wkData();
-  if (!d.wk) d.wk = WK_DEF.map(t => ({ t, d: false }));
-  d.wk[i].d = !d.wk[i].d;
-  saveWeek(d); renderWeekend();
-}
-
-function addWk() {
-  const inp = document.getElementById('wiAdd');
-  const v = inp.value.trim(); if (!v) return;
-  const d = wkData();
-  if (!d.wk) d.wk = WK_DEF.map(t => ({ t, d: false }));
-  d.wk.push({ t: v, d: false });
-  saveWeek(d); inp.value = '';
-  renderWeekend();
-}
-
-function rmWk(i) {
-  const d = wkData();
-  if (!d.wk) d.wk = WK_DEF.map(t => ({ t, d: false }));
-  d.wk.splice(i, 1);
-  saveWeek(d); renderWeekend();
-}
+function togWk(i) { const d=wkData(); if(!d.wk)d.wk=WK_DEF.map(t=>({t,d:false})); d.wk[i].d=!d.wk[i].d; saveWeek(d); renderWeekend(); }
+function addWk() { const inp=document.getElementById('wiAdd'),v=inp.value.trim(); if(!v)return; const d=wkData(); if(!d.wk)d.wk=WK_DEF.map(t=>({t,d:false})); d.wk.push({t:v,d:false}); saveWeek(d); inp.value=''; renderWeekend(); }
+function rmWk(i) { const d=wkData(); if(!d.wk)d.wk=WK_DEF.map(t=>({t,d:false})); d.wk.splice(i,1); saveWeek(d); renderWeekend(); }
 
 /* ── Notes ── */
 function renderNotes() {
-  const area = document.getElementById('notesArea');
-  area.value = wkData().notes || '';
-  area.oninput = () => {
-    const d = wkData();
-    d.notes = area.value;
-    saveWeek(d);
-  };
+  const area=document.getElementById('notesArea');
+  area.value=wkData().notes||'';
+  area.oninput=()=>{ const d=wkData(); d.notes=area.value; saveWeek(d); };
 }
 
-/* =============================================================
-   BACKUP / RESTORE
-   Backup  → downloads a .json file (put it on Google Drive)
-   Restore → pick that .json file to load all your data back
-   ============================================================= */
+/* ── Date display ── */
+function renderDate() {
+  const el=document.getElementById('todayDate');
+  if(el) el.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+
+/* ── Backup / Restore ── */
 function backup() {
-  const all = loadAll();
-  const blob = new Blob([JSON.stringify(all, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `planner-backup-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  const all=loadAll();
+  const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url;
+  a.download=`planner-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url);
   toast('Backup saved! Upload it to Google Drive.');
 }
 
-document.getElementById('fileInput').addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    try {
-      const data = JSON.parse(ev.target.result);
-      saveAll(data);
-      toast('Data restored successfully!');
-      renderAll();
-    } catch {
-      toast('Invalid file. Pick a valid planner backup.');
-    }
+document.getElementById('fileInput').addEventListener('change',e=>{
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{ saveAll(JSON.parse(ev.target.result)); toast('Data restored!'); renderAll(); }
+    catch{ toast('Invalid file.'); }
   };
-  reader.readAsText(file);
-  e.target.value = '';
+  reader.readAsText(file); e.target.value='';
 });
 
 /* ── CSV ── */
 function exportCSV() {
-  const chk = wkData().chk || {};
-  let csv = 'Activity,Duration,' + DAYS.join(',') + ',Score\n';
-  HABITS.forEach(h => {
-    csv += [
-      `"${h.n}"`, h.d || '-',
-      ...DAYS.map((_, i) => { const v = chk[`${h.n}_${i}`] || 0; return v === 1 ? 'Done' : v === 2 ? 'Missed' : '-'; }),
-      DAYS.reduce((s, _, i) => s + (chk[`${h.n}_${i}`] === 1 ? 1 : 0), 0) + '/7'
-    ].join(',') + '\n';
+  const chk=wkData().chk||{};
+  let csv='Activity,Duration,'+DAYS.join(',')+',Score\n';
+  HABITS.forEach(h=>{
+    csv+=[`"${h.n}"`,h.d||'-',...DAYS.map((_,i)=>{const v=chk[`${h.n}_${i}`]||0;return v===1?'Done':v===2?'Missed':'-';}),
+      DAYS.reduce((s,_,i)=>s+(chk[`${h.n}_${i}`]===1?1:0),0)+'/7'].join(',')+'\n';
   });
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `planner-${wk()}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('CSV exported!');
+  const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=`planner-${wk()}.csv`;
+  a.click(); URL.revokeObjectURL(url); toast('CSV exported!');
 }
 
-/* =============================================================
-   PWA INSTALL
-   ============================================================= */
+/* ── PWA ── */
 let deferredPrompt;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installBtn').style.display = 'inline-block';
-});
-
-function installApp() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => {
-      deferredPrompt = null;
-      document.getElementById('installBtn').style.display = 'none';
-    });
-  }
-}
-
-/* Register service worker for offline support */
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
-}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').style.display='inline-block';});
+function installApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBtn').style.display='none';});}}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
 
 /* ── Nav & init ── */
-function go(d) { weekOff += d; renderAll(); }
-
-function renderAll() {
-  document.getElementById('wkLbl').textContent = wkRange();
-  renderDaily();
-  renderMatrix();
-  renderWeekend();
-  renderNotes();
+function go(d){weekOff+=d;renderAll();}
+function renderAll(){
+  document.getElementById('wkLbl').textContent=wkRange();
+  renderDaily(); renderMatrix(); renderWeekend(); renderNotes(); renderDate();
 }
-
 renderAll();
 </script>
 </body>
